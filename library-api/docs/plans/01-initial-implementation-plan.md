@@ -20,8 +20,8 @@ checks are marked complete.
 
 ## Progress
 
-- [ ] Decision gate complete
-- [ ] Slice 1 — Runnable API foundation
+- [x] Decision gate complete
+- [x] Slice 1 — Runnable API foundation
 - [ ] Slice 2 — Create a Book
 - [ ] Slice 3 — Retrieve a Book
 - [ ] Slice 4 — Replace a Book safely
@@ -80,7 +80,7 @@ replace the proposed value in this document before checking it.
 - Return `412 Precondition Failed` when the header is valid but does not match the
   current version.
 
-- [ ] D-001 accepted or replaced with an explicit alternative
+- [x] D-001 accepted or replaced with an explicit alternative
 
 ### D-002 — HTTP schemas and Problem Details
 
@@ -97,7 +97,7 @@ replace the proposed value in this document before checking it.
 - Add concrete request, success, and failure examples to OpenAPI while the
   affected endpoint is implemented.
 
-- [ ] D-002 accepted or replaced with an explicit alternative
+- [x] D-002 accepted or replaced with an explicit alternative
 
 ### D-003 — Unknown query parameters
 
@@ -106,7 +106,7 @@ replace the proposed value in this document before checking it.
 - Reject unknown query parameters with `400 Bad Request`.
 - Report each unknown parameter in the validation Problem Details response.
 
-- [ ] D-003 accepted or replaced with an explicit alternative
+- [x] D-003 accepted or replaced with an explicit alternative
 
 ### D-004 — Cursor contract
 
@@ -121,7 +121,7 @@ replace the proposed value in this document before checking it.
 - Do not add signing or encryption for this company test. Treat cursors as opaque
   client contract, not as trusted input.
 
-- [ ] D-004 accepted or replaced with an explicit alternative
+- [x] D-004 accepted or replaced with an explicit alternative
 
 ### D-005 — Database concurrency
 
@@ -135,7 +135,7 @@ replace the proposed value in this document before checking it.
 - Perform the HTTP precondition check before no-op detection.
 - Persist the Book and its Book Changes in one transaction.
 
-- [ ] D-005 accepted or replaced with an explicit alternative
+- [x] D-005 accepted or replaced with an explicit alternative
 
 ### D-006 — Database verification scope
 
@@ -148,14 +148,14 @@ replace the proposed value in this document before checking it.
 - Record the exact manual commands and representative results in the pull request
   or delivery notes.
 
-- [ ] D-006 accepted or replaced with an explicit alternative
+- [x] D-006 accepted or replaced with an explicit alternative
 
 ### Decision-gate exit criteria
 
-- [ ] All six decisions are checked
-- [ ] The specification is updated if any chosen decision changes its requirements
-- [ ] A new ADR is added if a decision is architecturally durable
-- [ ] No slice below has an unresolved decision blocker
+- [x] All six decisions are checked
+- [x] The specification is updated if any chosen decision changes its requirements
+- [x] A new ADR is added if a decision is architecturally durable
+- [x] No slice below has an unresolved decision blocker
 
 ---
 
@@ -181,58 +181,58 @@ policies, and no longer exposes the generated Weather Forecast endpoint.
 
 #### Solution and project boundaries
 
-- [ ] Create a solution containing `Library.Domain`, `Library.Application`,
+- [x] Create a solution containing `Library.Domain`, `Library.Application`,
   `Library.Infrastructure`, `Library.Api`, and `Library.UnitTests`
-- [ ] Move the existing web SDK project into `Library.Api`
-- [ ] Set project references to match
+- [x] Move the existing web SDK project into `Library.Api`
+- [x] Set project references to match
   [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
-- [ ] Verify Domain has no project dependencies
-- [ ] Verify Application references only Domain
-- [ ] Verify Infrastructure references Application and Domain
-- [ ] Verify API references Application and Infrastructure
-- [ ] Verify UnitTests references only the projects it tests
-- [ ] Preserve nullable reference types and implicit usings
+- [x] Verify Domain has no project dependencies
+- [x] Verify Application references only Domain
+- [x] Verify Infrastructure references Application and Domain
+- [x] Verify API references Application and Infrastructure
+- [x] Verify UnitTests references only the projects it tests
+- [x] Preserve nullable reference types and implicit usings
 
 #### HTTP foundation
 
-- [ ] Remove `WeatherForecast` and `WeatherForecastController`
-- [ ] Configure controller discovery and JSON conventions
-- [ ] Add central unexpected-exception handling with safe Problem Details
-- [ ] Add reusable expected-result-to-Problem-Details mapping
-- [ ] Configure open CORS without credentials and expose `ETag`
-- [ ] Enable OpenAPI at `/openapi/v1.json` only in Development
-- [ ] Enable Swagger UI at `/swagger` only in Development
-- [ ] Add dependency-injection composition extension points for Application and
+- [x] Remove `WeatherForecast` and `WeatherForecastController`
+- [x] Configure controller discovery and JSON conventions
+- [x] Add central unexpected-exception handling with safe Problem Details
+- [x] Add reusable expected-result-to-Problem-Details mapping
+- [x] Configure open CORS without credentials and expose `ETag`
+- [x] Enable OpenAPI at `/openapi/v1.json` only in Development
+- [x] Enable Swagger UI at `/swagger` only in Development
+- [x] Add dependency-injection composition extension points for Application and
   Infrastructure
 
 #### Tests
 
-- [ ] Add a unit test for each pure expected-result mapping
-- [ ] Add a unit test proving unexpected exception details are not exposed, if
+- [x] Add a unit test for each pure expected-result mapping
+- [x] Add a unit test proving unexpected exception details are not exposed, if
   this can be tested without introducing an HTTP integration-test host
-- [ ] Keep test doubles hand-written
+- [x] Keep test doubles hand-written
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] The API starts in Development
-- [ ] `GET /openapi/v1.json` returns the OpenAPI document in Development
-- [ ] `GET /swagger` loads Swagger UI in Development
-- [ ] The Weather Forecast route returns `404`
-- [ ] A representative CORS response allows an arbitrary origin, does not allow
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] The API starts in Development
+- [x] `GET /openapi/v1.json` returns the OpenAPI document in Development
+- [x] `GET /swagger` loads Swagger UI in Development
+- [x] The Weather Forecast route returns `404`
+- [x] A representative CORS response allows an arbitrary origin, does not allow
   credentials, and exposes `ETag`
-- [ ] OpenAPI and Swagger UI are unavailable outside Development
-- [ ] An unexpected exception returns safe `application/problem+json`
-- [ ] Project references match the documented dependency direction
+- [x] OpenAPI and Swagger UI are unavailable outside Development
+- [x] An unexpected exception returns safe `application/problem+json`
+- [x] Project references match the documented dependency direction
 
 ### Pre-commit review
 
-- [ ] Review the complete diff for accidental domain or persistence decisions
-- [ ] Confirm no sample Weather Forecast files remain
-- [ ] Confirm no secrets or machine-specific configuration were added
-- [ ] Confirm `docs/ARCHITECTURE.md` remains accurate
-- [ ] Mark Slice 1 complete in [Progress](#progress)
+- [x] Review the complete diff for accidental domain or persistence decisions
+- [x] Confirm no sample Weather Forecast files remain
+- [x] Confirm no secrets or machine-specific configuration were added
+- [x] Confirm `docs/ARCHITECTURE.md` remains accurate
+- [x] Mark Slice 1 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): establish runnable API foundation`
 

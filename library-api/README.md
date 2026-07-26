@@ -2,7 +2,10 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-> The API is currently the original project template. The Book API, PostgreSQL persistence, Docker Compose setup, Swagger UI, and tests are specified in [GitHub issue #1](https://github.com/kevinka999/library/issues/1) and are not all implemented yet.
+The runnable Clean Architecture foundation is implemented. The Book API,
+PostgreSQL persistence, and Docker Compose setup are specified in
+[GitHub issue #1](https://github.com/kevinka999/library/issues/1) and are not yet
+implemented.
 
 ## Documentation
 
@@ -31,7 +34,7 @@ dotnet restore
 dotnet build
 ```
 
-## Run the current template
+## Run the API
 
 Start the HTTP development profile:
 
@@ -43,6 +46,7 @@ The current launch profile listens at:
 
 - `http://localhost:5168`
 - OpenAPI document: `http://localhost:5168/openapi/v1.json`
+- Swagger UI: `http://localhost:5168/swagger`
 
 HTTPS is also available through:
 
@@ -56,7 +60,7 @@ The HTTPS profile listens at `https://localhost:7119` and may require trusting t
 dotnet dev-certs https --trust
 ```
 
-Swagger UI will be available only in the Development environment after its package and middleware are added. Update this README with its final URL when implemented.
+OpenAPI and Swagger UI are available only in the Development environment.
 
 ## Database
 
@@ -88,7 +92,10 @@ Run all configured tests with:
 dotnet test
 ```
 
-The target test suite uses xUnit and focuses on Domain behavior and Application use-case handlers with hand-written fakes. The project intentionally does not require integration tests.
+The test suite uses xUnit and hand-written fakes. It currently covers the
+cross-cutting expected-error and unexpected-exception behavior; later slices
+will add Domain and Application handler coverage. The project intentionally
+does not require integration tests.
 
 ## Target API
 
