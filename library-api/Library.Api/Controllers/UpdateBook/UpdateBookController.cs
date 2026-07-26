@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using Library.Api.Errors;
+using Library.Api.OpenApi;
 using Library.Application.Common;
 using Library.Application.Handlers;
 using Library.Application.Handlers.UpdateBook;
@@ -19,6 +20,10 @@ public sealed class UpdateBookController(UpdateBookHandler handler) : Controller
     /// <response code="412">The supplied ETag is stale.</response>
     /// <response code="428">The If-Match header is absent.</response>
     [HttpPut]
+    [ResponseHeader(
+        StatusCodes.Status200OK,
+        "ETag",
+        "The strong ETag representing the current Book version.")]
     [ProducesResponseType<UpdateBookOutputDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(
         typeof(HttpValidationProblemDetails),

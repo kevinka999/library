@@ -1,4 +1,5 @@
 using Library.Api.Errors;
+using Library.Api.OpenApi;
 using Library.Application.Handlers;
 using Library.Application.Handlers.GetBook;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,10 @@ public sealed class GetBookController(GetBookHandler handler) : ControllerBase
     /// <response code="200">Returns the current Book with its ETag.</response>
     /// <response code="404">The requested Book does not exist.</response>
     [HttpGet]
+    [ResponseHeader(
+        StatusCodes.Status200OK,
+        "ETag",
+        "The strong ETag representing the current Book version.")]
     [ProducesResponseType<GetBookOutputDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(
         typeof(ProblemDetails),

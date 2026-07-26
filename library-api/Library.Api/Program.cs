@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Library.Api;
 using Library.Api.Errors;
+using Library.Api.OpenApi;
 using Library.Application;
 using Library.Infrastructure;
 
@@ -22,7 +23,9 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options 
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
-builder.Services.AddOpenApi("v1");
+builder.Services.AddOpenApi(
+    "v1",
+    options => options.AddOperationTransformer<ResponseHeaderOperationTransformer>());
 
 builder.Services.AddCors(options =>
 {

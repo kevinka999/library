@@ -2,14 +2,14 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-The runnable Clean Architecture foundation and Book creation, retrieval,
-replacement, and search vertical slices are implemented. `POST /api/books`
+The initial Book API is implemented and delivery-verified. `POST /api/books`
 stores the normalized Book and its complete initial Change Set atomically in
 PostgreSQL. `GET /api/books/{id}` returns its current state and version-backed
 ETag. `PUT /api/books/{id}` safely replaces it using `If-Match`, appending one
 complete Change Set only when the normalized state changes. `GET /api/books`
 returns deterministic numbered pages and optionally searches current Book
-fields.
+fields. `GET /api/books/{id}/history` cursor-pages through complete Change Sets
+with field, time, and direction filters.
 
 ## Documentation
 
@@ -17,6 +17,7 @@ fields.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) describes the target component boundaries and runtime flows.
 - [`docs/domain/BOOKS.md`](docs/domain/BOOKS.md) describes Book behavior, invariants, and change-history semantics.
 - [`docs/adr/`](docs/adr/) records durable architectural decisions.
+- [`docs/delivery/01-initial-implementation-verification.md`](docs/delivery/01-initial-implementation-verification.md) records the initial delivery verification.
 
 ## Prerequisites
 
@@ -141,9 +142,9 @@ initial-history, update-history, no-op, optimistic-concurrency, and search
 validation and paging behavior are exercised through the Application handlers.
 The project intentionally does not require automated integration tests.
 
-## Target API
+## API
 
-The planned public surface is:
+The public surface is:
 
 ```text
 POST /api/books
@@ -211,3 +212,26 @@ treated as literal search text. Paging is one-based, defaults to 20 Books per
 page, and permits at most 100. Results are always ordered by title and then Book
 ID. Unsupported or repeated query parameters and invalid paging values return
 `400 application/problem+json`.
+
+Browse complete Change Sets, newest first:
+
+```sh
+curl 'http://localhost:5168/api/books/1/history?limit=20&sortDirection=descending'
+```
+
+Use the returned `nextCursor` as the `after` value for the next page. Cursors
+are valid only with the same normalized filters and direction:
+
+```sh
+curl --get 'http://localhost:5168/api/books/1/history' \
+  --data-urlencode 'changedField=title' \
+  --data-urlencode 'changedField=authors' \
+  --data-urlencode 'changedFrom=2020-01-01T00:00:00Z' \
+  --data-urlencode 'sortDirection=ascending' \
+  --data-urlencode 'limit=20' \
+  --data-urlencode 'after=CURSOR_FROM_THE_PREVIOUS_RESPONSE'
+```
+
+`changedFrom` is inclusive, `changedBefore` is exclusive, and a Changed Field
+match returns the entire containing Change Set. Invalid or incompatible cursors
+return `400 application/problem+json`.

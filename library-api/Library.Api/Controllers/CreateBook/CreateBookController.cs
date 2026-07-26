@@ -1,4 +1,5 @@
 using Library.Api.Errors;
+using Library.Api.OpenApi;
 using Library.Application.Handlers;
 using Library.Application.Handlers.CreateBook;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,10 @@ public sealed class CreateBookController(CreateBookHandler handler) : Controller
     /// <response code="201">Returns the normalized Book with Location and ETag headers.</response>
     /// <response code="400">Returns all detected validation errors.</response>
     [HttpPost]
+    [ResponseHeader(
+        StatusCodes.Status201Created,
+        "ETag",
+        "The strong ETag representing the current Book version.")]
     [ProducesResponseType<CreateBookOutputDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(
         typeof(HttpValidationProblemDetails),

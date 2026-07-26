@@ -27,7 +27,7 @@ checks are marked complete.
 - [x] Slice 4 — Replace a Book safely
 - [x] Slice 5 — Search and page Books
 - [x] Slice 6 — Browse Book History
-- [ ] Slice 7 — Delivery verification
+- [x] Slice 7 — Delivery verification
 
 ## Dependency order
 
@@ -748,75 +748,75 @@ PostgreSQL-specific behavior has a recorded manual verification result.
 
 #### Clean-environment verification
 
-- [ ] Follow the README from a clean checkout or equivalent clean working copy
-- [ ] Supply the development database secret through the documented mechanism
-- [ ] Start PostgreSQL with Docker Compose
-- [ ] Start the API directly with `dotnet run`
-- [ ] Confirm Development migrations apply without manual schema steps
-- [ ] Confirm the named volume retains data across container recreation
-- [ ] Confirm production-mode startup does not apply migrations
+- [x] Follow the README from a clean checkout or equivalent clean working copy
+- [x] Supply the development database secret through the documented mechanism
+- [x] Start PostgreSQL with Docker Compose
+- [x] Start the API directly with `dotnet run`
+- [x] Confirm Development migrations apply without manual schema steps
+- [x] Confirm the named volume retains data across container recreation
+- [x] Confirm production-mode startup does not apply migrations
 
 #### Full behavior walkthrough
 
-- [ ] Create a Book
-- [ ] Retrieve the created Book
-- [ ] Perform one single-field update
-- [ ] Perform one multi-field update
-- [ ] Repeat an identical current-version update
-- [ ] Attempt a stale update
-- [ ] Search by title
-- [ ] Search by description
-- [ ] Search by Author Name
-- [ ] Traverse at least two numbered Book pages
-- [ ] Traverse at least two history cursor pages in each direction
-- [ ] Apply each history filter independently and in combination
-- [ ] Verify every expected failure status and Problem Details content type
-- [ ] Verify CORS and ETag exposure from a browser-like request
-- [ ] Exercise every operation through Swagger UI
+- [x] Create a Book
+- [x] Retrieve the created Book
+- [x] Perform one single-field update
+- [x] Perform one multi-field update
+- [x] Repeat an identical current-version update
+- [x] Attempt a stale update
+- [x] Search by title
+- [x] Search by description
+- [x] Search by Author Name
+- [x] Traverse at least two numbered Book pages
+- [x] Traverse at least two history cursor pages in each direction
+- [x] Apply each history filter independently and in combination
+- [x] Verify every expected failure status and Problem Details content type
+- [x] Verify CORS and ETag exposure from a browser-like request
+- [x] Exercise every operation through Swagger UI
 
 #### Persistence inspection
 
-- [ ] Confirm exactly two domain tables exist
-- [ ] Confirm the expected foreign key, uniqueness constraints, and indexes exist
-- [ ] Confirm Author Names are stored as `text[]`
-- [ ] Confirm Book Change values are stored as `jsonb`
-- [ ] Confirm creation and update Change Sets are complete
-- [ ] Confirm no-op and stale updates created no Book Changes
-- [ ] Confirm a forced concurrent update cannot partially commit
-- [ ] Confirm history query plans use the intended indexes
+- [x] Confirm exactly two domain tables exist
+- [x] Confirm the expected foreign key, uniqueness constraints, and indexes exist
+- [x] Confirm Author Names are stored as `text[]`
+- [x] Confirm Book Change values are stored as `jsonb`
+- [x] Confirm creation and update Change Sets are complete
+- [x] Confirm no-op and stale updates created no Book Changes
+- [x] Confirm a forced concurrent update cannot partially commit
+- [x] Confirm history query plans use the intended indexes
 
 #### Documentation and contract review
 
-- [ ] Update README build, test, Compose, migration, run, and secret-setup commands
-- [ ] Confirm `CONTEXT.md` matches implemented vocabulary
-- [ ] Confirm `docs/domain/BOOKS.md` matches implemented behavior
-- [ ] Confirm `docs/ARCHITECTURE.md` matches actual project boundaries and flows
-- [ ] Confirm ADRs match the implemented persistence choices
-- [ ] Confirm the OpenAPI contract matches every implemented route and outcome
-- [ ] Remove obsolete sample requests from `library-api.http` or replace them with
+- [x] Update README build, test, Compose, migration, run, and secret-setup commands
+- [x] Confirm `CONTEXT.md` matches implemented vocabulary
+- [x] Confirm `docs/domain/BOOKS.md` matches implemented behavior
+- [x] Confirm `docs/ARCHITECTURE.md` matches actual project boundaries and flows
+- [x] Confirm ADRs match the implemented persistence choices
+- [x] Confirm the OpenAPI contract matches every implemented route and outcome
+- [x] Remove obsolete sample requests from `library-api.http` or replace them with
   representative Book requests
-- [ ] Record manual verification evidence in the pull request or delivery notes
+- [x] Record manual verification evidence in the pull request or delivery notes
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds from a clean checkout
-- [ ] `dotnet test` succeeds from a clean checkout
-- [ ] All five endpoints satisfy their slice-level acceptance criteria
-- [ ] Swagger UI exposes all five operations and their complete contracts
-- [ ] No secret, generated build output, or machine-specific file is tracked
-- [ ] No implementation is left dependent on an unchecked manual assumption
-- [ ] All authoritative documentation is accurate
-- [ ] Every requirement ID is covered by an implemented slice
-- [ ] Every item in [Progress](#progress) is checked
+- [x] `dotnet build` succeeds from a clean checkout
+- [x] `dotnet test` succeeds from a clean checkout
+- [x] All five endpoints satisfy their slice-level acceptance criteria
+- [x] Swagger UI exposes all five operations and their complete contracts
+- [x] No secret, generated build output, or machine-specific file is tracked
+- [x] No implementation is left dependent on an unchecked manual assumption
+- [x] All authoritative documentation is accurate
+- [x] Every requirement ID is covered by an implemented slice
+- [x] Every item in [Progress](#progress) is checked
 
 ### Pre-commit review
 
-- [ ] Review the full branch diff against the implementation specification
-- [ ] Review package references and remove unused dependencies
-- [ ] Review migrations and runtime configuration one final time
-- [ ] Confirm formatting and repository naming are consistent
-- [ ] Confirm all prior commits are focused and use `type(api): description`
-- [ ] Mark Slice 7 complete in [Progress](#progress)
+- [x] Review the full branch diff against the implementation specification
+- [x] Review package references and remove unused dependencies
+- [x] Review migrations and runtime configuration one final time
+- [x] Confirm formatting and repository naming are consistent
+- [x] Confirm all prior commits are focused and use `type(api): description`
+- [x] Mark Slice 7 complete in [Progress](#progress)
 
 **Suggested commit:** `docs(api): finalize delivery instructions`
 
@@ -824,10 +824,12 @@ PostgreSQL-specific behavior has a recorded manual verification result.
 
 Fill this section when Slice 7 is complete.
 
-- **Implementation completed by:**
-- **Completion date:**
-- **Final commit:**
-- **Automated verification:**
+- **Implementation completed by:** Codex
+- **Completion date:** 2026-07-26
+- **Final commit:** `docs(api): finalize delivery instructions`
+- **Automated verification:** `dotnet build` succeeded with 0 warnings; all 89
+  tests passed.
 - **Manual verification evidence:**
-- **Accepted deviations from the specification:**
-- **Follow-up issues:**
+  [`../delivery/01-initial-implementation-verification.md`](../delivery/01-initial-implementation-verification.md)
+- **Accepted deviations from the specification:** None.
+- **Follow-up issues:** None.
