@@ -9,6 +9,7 @@ import { Button } from '../../components/ui/button'
 import { buttonVariants } from '../../components/ui/button-styles'
 import { formatDate } from '../../i18n'
 import { parseBookId } from '../../lib/book-id'
+import { HistorySection } from './history-section'
 
 function StateCard({ title, message, action }: { title: string; message: string; action?: React.ReactNode }) {
   return (
@@ -136,7 +137,7 @@ export function BookDetailsPage() {
           </dl>
         )}
       </section>
-      <div id="book-history" className="mt-8" />
+      <HistorySection bookId={book.id} />
     </div>
   )
 }

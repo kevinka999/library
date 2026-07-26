@@ -1,9 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createBook } from './create-book'
 import type { CreateBookInput } from './create-book'
 import { getBooks, type GetBooksInput } from './get-books'
 import { getBook } from './get-book'
 import { updateBook, type UpdateBookInput } from './update-book'
+import { getBookHistory, type BookHistoryFilters } from './get-book-history'
 import { bookKeys } from './query-keys'
 
 export function useBooksQuery(input: GetBooksInput, enabled = true) {
@@ -41,5 +42,21 @@ export function useUpdateBook() {
       queryClient.setQueryData(bookKeys.detail(result.book.id), result)
       void queryClient.invalidateQueries({ queryKey: bookKeys.lists() })
     },
+  })
+}
+
+export function useBookHistoryQuery(
+  id: number,
+  filters: BookHistoryFilters,
+  enabled = true,
+) {
+  return useInfiniteQuery({
+    queryKey: bookKeys.history(id, filters),
+    queryFn: ({ pageParam }) =>
+      getBookHistory({ bookId: id, ...filters, after: pageParam }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore && lastPage.nextCursor ? lastPage.nextCursor : undefined,
+    enabled,
   })
 }

@@ -20,6 +20,11 @@ const originalBook = {
 describe('book details and editing', () => {
   beforeEach(async () => {
     await i18n.changeLanguage('en')
+    server.use(
+      http.get(`${detailUrl}/history`, () =>
+        HttpResponse.json({ items: [], nextCursor: null, hasMore: false }),
+      ),
+    )
   })
 
   it('renders the complete current Book from one ETag-paired response', async () => {
@@ -53,7 +58,7 @@ describe('book details and editing', () => {
     const { queryClient } = renderApp(['/books/7'])
     await screen.findByRole('heading', { name: 'The Original' })
     await user.click(screen.getByRole('button', { name: 'Edit book' }))
-    const description = screen.getByLabelText('Short description')
+    const description = screen.getByRole('textbox', { name: 'Short description' })
     await user.clear(description)
     await user.type(description, 'Revised description')
     await user.click(screen.getByRole('button', { name: 'Save changes' }))
@@ -80,7 +85,7 @@ describe('book details and editing', () => {
     renderApp(['/books/7'])
     await screen.findByRole('heading', { name: 'The Original' })
     await user.click(screen.getByRole('button', { name: 'Edit book' }))
-    const title = screen.getByLabelText('Title')
+    const title = screen.getByRole('textbox', { name: 'Title' })
     await user.clear(title)
     await user.type(title, 'My losing draft')
     await user.click(screen.getByRole('button', { name: 'Save changes' }))
@@ -102,11 +107,11 @@ describe('book details and editing', () => {
     renderApp(['/books/7'])
     await screen.findByRole('heading', { name: 'The Original' })
     await user.click(screen.getByRole('button', { name: 'Edit book' }))
-    await user.type(screen.getByLabelText('Title'), ' changed')
+    await user.type(screen.getByRole('textbox', { name: 'Title' }), ' changed')
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(screen.getByLabelText('Title')).toBeVisible()
+    expect(screen.getByRole('textbox', { name: 'Title' })).toBeVisible()
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(screen.queryByLabelText('Title')).not.toBeInTheDocument()
+    expect(screen.queryByRole('textbox', { name: 'Title' })).not.toBeInTheDocument()
     expect(confirm).toHaveBeenCalledTimes(2)
   })
 
@@ -136,7 +141,7 @@ describe('book details and editing', () => {
     renderApp(['/books/7'])
     await screen.findByRole('heading', { name: 'The Original' })
     await user.click(screen.getByRole('button', { name: 'Edit book' }))
-    const title = screen.getByLabelText('Title')
+    const title = screen.getByRole('textbox', { name: 'Title' })
     await user.clear(title)
     await user.type(title, 'Draft title')
     await user.click(screen.getByRole('button', { name: 'Save changes' }))

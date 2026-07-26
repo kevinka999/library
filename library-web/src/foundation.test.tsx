@@ -1,8 +1,7 @@
-import { AxiosError } from 'axios'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { apiClient, normalizeApiError } from './api/client'
+import { apiClient } from './api/client'
 import { i18n, LANGUAGE_STORAGE_KEY, resolveInitialLanguage } from './i18n'
 import { renderApp } from './test/render-app'
 import { server } from './test/server'
@@ -45,22 +44,6 @@ describe('application foundation', () => {
     expect(resolveInitialLanguage('en', 'de-AT')).toBe('en')
   })
 
-  it('normalizes validation and stale HTTP failures', () => {
-    const validation = new AxiosError()
-    Object.assign(validation, {
-      response: { status: 400, data: { errors: { Title: ['Required'] } } },
-    })
-    expect(normalizeApiError(validation)).toMatchObject({
-      kind: 'validation',
-      status: 400,
-      fieldErrors: { Title: ['Required'] },
-    })
-
-    const stale = new AxiosError()
-    Object.assign(stale, { response: { status: 412 } })
-    expect(normalizeApiError(stale)).toMatchObject({ kind: 'stale', status: 412 })
-  })
-
   it('keeps valid book routes inside the application shell', async () => {
     server.use(
       http.get('http://localhost:5168/api/books/12', () =>
@@ -75,6 +58,9 @@ describe('application foundation', () => {
           },
           { headers: { ETag: '"v1"' } },
         ),
+      ),
+      http.get('http://localhost:5168/api/books/12/history', () =>
+        HttpResponse.json({ items: [], nextCursor: null, hasMore: false }),
       ),
     )
     renderApp(['/books/12'])

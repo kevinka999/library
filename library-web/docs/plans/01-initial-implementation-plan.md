@@ -26,7 +26,7 @@ and do not change `library-api`.
 - [x] Slice 1 — Localized application foundation
 - [x] Slice 2 — Search, page, and create Books
 - [x] Slice 3 — View and safely edit a Book
-- [ ] Slice 4 — Browse Book History and verify the delivery
+- [x] Slice 4 — Browse Book History and verify the delivery
 
 ## Dependency order
 
@@ -669,15 +669,15 @@ plus final cross-feature verification
 
 ## Final completion record
 
-- [ ] All scope decisions are checked
-- [ ] All four slices are checked in [Progress](#progress)
-- [ ] Every requirement from `WEB-001` through `WEB-018` is covered by at least
+- [x] All scope decisions are checked
+- [x] All four slices are checked in [Progress](#progress)
+- [x] Every requirement from `WEB-001` through `WEB-018` is covered by at least
   one passing automated test or recorded manual verification
-- [ ] `pnpm lint`, `pnpm test -- --run`, and `pnpm build` pass from the final
+- [x] `pnpm lint`, `pnpm test -- --run`, and `pnpm build` pass from the final
   worktree
-- [ ] The final implementation matches the checked-in OpenAPI contract
-- [ ] The frontend contains no create or edit feature routes
-- [ ] English and German cover all application-owned copy
-- [ ] The Books table, creation modal, details, inline edit form, grouped
+- [x] The final implementation matches the checked-in OpenAPI contract
+- [x] The frontend contains no create or edit feature routes
+- [x] English and German cover all application-owned copy
+- [x] The Books table, creation modal, details, inline edit form, grouped
   timeline, and Load More flow have been verified together
-- [ ] No file outside `library-web` was changed
+- [x] No file outside `library-web` was changed

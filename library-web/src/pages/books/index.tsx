@@ -139,6 +139,7 @@ export function BooksPage() {
             <nav className="flex flex-col items-center justify-between gap-4 border-t border-border p-4 sm:flex-row sm:p-6" aria-label={t('pagination.label')}>
               <p className="text-sm text-muted">
                 {t('pagination.summary', {
+                  count: booksQuery.data.totalCount,
                   page: formatNumber(booksQuery.data.page, i18n.resolvedLanguage),
                   totalPages: formatNumber(booksQuery.data.totalPages, i18n.resolvedLanguage),
                   totalCount: formatNumber(booksQuery.data.totalCount, i18n.resolvedLanguage),

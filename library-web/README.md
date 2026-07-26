@@ -1,8 +1,7 @@
 # Library Web
 
 React and TypeScript frontend for browsing, creating, editing, and viewing the
-history of Books. The repository is currently a Vite scaffold; the target
-product and architecture are documented before feature implementation begins.
+history of Books. The interface is available in English and German.
 
 ## Documentation
 
@@ -18,20 +17,46 @@ Read only the documents relevant to the current change.
 
 ## Local development
 
-Requirements: Node.js compatible with `package.json`, `pnpm`, and the API running
-at `http://localhost:5168`.
+Requirements:
+
+- Node.js compatible with `package.json`
+- `pnpm`
+- the Library API running at `http://localhost:5168`
 
 ```sh
 pnpm install
+cp .env.example .env.local
 pnpm dev
 ```
 
-Before delivery:
+`VITE_API_URL` is a public API origin, not a place for secrets. The example
+already targets the default local API.
+
+The development server prints its local browser URL, normally
+`http://localhost:5173`. The application redirects `/` to `/books`.
+
+## Verification
+
+Run the behavior tests once:
+
+```sh
+pnpm test -- --run
+```
+
+Run tests interactively while developing:
+
+```sh
+pnpm test:watch
+```
+
+Before delivery, run all repository checks:
 
 ```sh
 pnpm lint
+pnpm test -- --run
 pnpm build
 ```
 
-The frontend must read the API origin from `VITE_API_URL`; implementation should
-provide a safe local example without committing secrets.
+The behavior suite uses MSW and does not require a running API. Manual browse,
+create, edit, optimistic-concurrency, and history checks do require the API and
+appropriate seed data.
