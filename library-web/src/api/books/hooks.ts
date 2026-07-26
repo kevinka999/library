@@ -21,7 +21,10 @@ export function useCreateBook() {
     mutationFn: (input: CreateBookInput) => createBook(input),
     onSuccess: (result) => {
       queryClient.setQueryData(bookKeys.detail(result.book.id), result)
-      void queryClient.invalidateQueries({ queryKey: bookKeys.lists() })
+      void queryClient.invalidateQueries({
+        queryKey: bookKeys.lists(),
+        refetchType: 'none',
+      })
     },
   })
 }
@@ -38,9 +41,19 @@ export function useUpdateBook() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (input: UpdateBookInput) => updateBook(input),
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       queryClient.setQueryData(bookKeys.detail(result.book.id), result)
-      void queryClient.invalidateQueries({ queryKey: bookKeys.lists() })
+      void queryClient.invalidateQueries({
+        queryKey: bookKeys.detail(result.book.id),
+        refetchType: 'none',
+      })
+      void queryClient.invalidateQueries({
+        queryKey: bookKeys.lists(),
+        refetchType: 'none',
+      })
+      await queryClient.invalidateQueries({
+        queryKey: bookKeys.historiesForBook(result.book.id),
+      })
     },
   })
 }

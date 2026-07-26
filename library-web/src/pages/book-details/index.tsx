@@ -3,13 +3,13 @@ import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, Pencil } from 'lucide-react'
 import { ApiError } from '../../api/client'
-import { useBookQuery, useUpdateBook } from '../../api/books/hooks'
-import { BookForm, type BookFormValues } from '../../components/book-form'
+import { useBookQuery } from '../../api/books/hooks'
 import { Button } from '../../components/ui/button'
 import { buttonVariants } from '../../components/ui/button-styles'
 import { formatDate } from '../../i18n'
 import { parseBookId } from '../../lib/book-id'
-import { HistorySection } from './history-section'
+import { HistorySection } from './components/history-section'
+import { EditBookDialog } from './components/edit-book-dialog'
 
 function StateCard({ title, message, action }: { title: string; message: string; action?: React.ReactNode }) {
   return (
@@ -22,13 +22,17 @@ function StateCard({ title, message, action }: { title: string; message: string;
 }
 
 export function BookDetailsPage() {
+  const [editOpen, setEditOpen] = useState(false)
+  const [disappeared, setDisappeared] = useState(false)
   const { bookId } = useParams()
   const { t, i18n } = useTranslation()
   const id = parseBookId(bookId)
   const bookQuery = useBookQuery(id ?? 0, id !== null)
-  const updateMutation = useUpdateBook()
-  const [editing, setEditing] = useState(false)
-  const [disappeared, setDisappeared] = useState(false)
+
+  async function reloadCurrent() {
+    const result = await bookQuery.refetch()
+    return result.isSuccess
+  }
 
   const backLink = (
     <Link className={`${buttonVariants({ variant: 'secondary' })} mt-6 no-underline`} to="/books">
@@ -62,23 +66,7 @@ export function BookDetailsPage() {
     )
   }
 
-  const { book, etag } = bookQuery.data
-  const initialValues: BookFormValues = {
-    title: book.title,
-    shortDescription: book.shortDescription,
-    publishDate: book.publishDate,
-    authors: [...book.authors],
-  }
-
-  async function update(values: BookFormValues) {
-    await updateMutation.mutateAsync({ id: book.id, etag, ...values })
-    setEditing(false)
-  }
-
-  async function reloadCurrent() {
-    const result = await bookQuery.refetch()
-    if (result.isSuccess) setEditing(false)
-  }
+  const { book } = bookQuery.data
 
   return (
     <div>
@@ -94,49 +82,38 @@ export function BookDetailsPage() {
               {book.title}
             </h1>
           </div>
-          {!editing && (
-            <Button variant="secondary" onClick={() => setEditing(true)}>
-              <Pencil size={17} aria-hidden="true" />
-              {t('forms.edit')}
-            </Button>
-          )}
+          <Button variant="secondary" onClick={() => setEditOpen(true)}>
+            <Pencil size={17} aria-hidden="true" />
+            {t('forms.edit')}
+          </Button>
         </div>
 
-        {editing ? (
-          <BookForm
-            key={`${book.id}:${etag}`}
-            initialValues={initialValues}
-            submitLabel={t('forms.save')}
-            pendingLabel={t('forms.saving')}
-            onSubmit={update}
-            onCancel={() => setEditing(false)}
-            confirmCancelWhenDirty
-            onReloadCurrent={() => void reloadCurrent()}
-            onApiError={(error) => {
-              if (error.kind === 'not-found') setDisappeared(true)
-            }}
-          />
-        ) : (
-          <dl className="mt-8 grid gap-6 border-t border-border pt-6 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <dt className="text-sm font-semibold text-muted">{t('forms.shortDescription')}</dt>
-              <dd className="mt-1 whitespace-pre-wrap text-ink">{book.shortDescription}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-semibold text-muted">{t('forms.publishDate')}</dt>
-              <dd className="mt-1 text-ink">{formatDate(book.publishDate, i18n.resolvedLanguage)}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-semibold text-muted">{t('forms.authors')}</dt>
-              <dd className="mt-1 text-ink">
-                <ul className="space-y-1">
-                  {book.authors.map((author) => <li key={author}>{author}</li>)}
-                </ul>
-              </dd>
-            </div>
-          </dl>
-        )}
+        <dl className="mt-8 grid gap-6 border-t border-border pt-6 sm:grid-cols-2">
+          <div>
+            <dt className="text-sm font-semibold text-muted">{t('forms.shortDescription')}</dt>
+            <dd className="mt-1 whitespace-pre-wrap text-ink">{book.shortDescription}</dd>
+          </div>
+          <div>
+            <dt className="text-sm font-semibold text-muted">{t('forms.publishDate')}</dt>
+            <dd className="mt-1 text-ink">{formatDate(book.publishDate, i18n.resolvedLanguage)}</dd>
+          </div>
+          <div>
+            <dt className="text-sm font-semibold text-muted">{t('forms.authors')}</dt>
+            <dd className="mt-1 text-ink">
+              <ul className="space-y-1">
+                {book.authors.map((author) => <li key={author}>{author}</li>)}
+              </ul>
+            </dd>
+          </div>
+        </dl>
       </section>
+      <EditBookDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        initialBook={bookQuery.data}
+        onReloadCurrent={reloadCurrent}
+        onNotFound={() => setDisappeared(true)}
+      />
       <HistorySection bookId={book.id} />
     </div>
   )

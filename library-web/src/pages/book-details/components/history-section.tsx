@@ -1,18 +1,19 @@
 import { useSearchParams } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Filter, RotateCcw } from 'lucide-react'
-import type { BookHistoryChange, BookHistoryItem, KnownChangedField } from '../../api/books/get-book-history'
-import { useBookHistoryQuery } from '../../api/books/hooks'
-import { Button } from '../../components/ui/button'
-import { Input } from '../../components/ui/input'
-import { formatDate, formatTimestamp } from '../../i18n'
+import type { PropsWithChildren } from 'react'
+import type { BookHistoryChange, BookHistoryItem, KnownChangedField } from '../../../api/books/get-book-history'
+import { useBookHistoryQuery } from '../../../api/books/hooks'
+import { Button } from '../../../components/ui/button'
+import { Input } from '../../../components/ui/input'
+import { formatDate, formatTimestamp } from '../../../i18n'
 import {
   knownChangedFields,
   localDateTimeToInstant,
   localDateTimeValue,
   parseHistorySearchParams,
   writeHistorySearchParams,
-} from './history-search-params'
+} from '../history-search-params'
 
 function rawValue(value: unknown): string {
   if (typeof value === 'string') return value
@@ -40,6 +41,24 @@ function displayValue(
   return rawValue(value)
 }
 
+function HistoryValue({
+  tone,
+  children,
+}: PropsWithChildren<{ tone: 'old' | 'new' }>) {
+  return (
+    <span
+      data-history-value={tone}
+      className={
+        tone === 'old'
+          ? 'box-decoration-clone rounded-md border border-danger/25 bg-danger-soft px-1.5 py-0.5 font-mono text-[0.85rem] font-medium text-danger line-through decoration-danger/50'
+          : 'box-decoration-clone rounded-md border border-primary/20 bg-primary-soft px-1.5 py-0.5 font-mono text-[0.85rem] font-medium text-primary'
+      }
+    >
+      {children}
+    </span>
+  )
+}
+
 function ChangeDescription({ change }: { change: BookHistoryChange }) {
   const { t, i18n } = useTranslation()
   const known = knownChangedFields.includes(change.changedField as KnownChangedField)
@@ -48,12 +67,40 @@ function ChangeDescription({ change }: { change: BookHistoryChange }) {
   const newValue = displayValue(change.newValue, change.changedField, i18n.resolvedLanguage, t('history.none'))
 
   if (change.oldValue === null || change.oldValue === undefined) {
-    return <>{t('history.added', { field, value: newValue })}</>
+    return (
+      <Trans
+        i18nKey="history.added"
+        values={{ field, value: newValue }}
+        components={[
+          <strong key="field" className="font-semibold text-ink" />,
+          <HistoryValue key="new" tone="new" />,
+        ]}
+      />
+    )
   }
   if (change.newValue === null || change.newValue === undefined) {
-    return <>{t('history.removed', { field, value: oldValue })}</>
+    return (
+      <Trans
+        i18nKey="history.removed"
+        values={{ field, value: oldValue }}
+        components={[
+          <strong key="field" className="font-semibold text-ink" />,
+          <HistoryValue key="old" tone="old" />,
+        ]}
+      />
+    )
   }
-  return <>{t('history.changed', { field, oldValue, newValue })}</>
+  return (
+    <Trans
+      i18nKey="history.changed"
+      values={{ field, oldValue, newValue }}
+      components={[
+        <strong key="field" className="font-semibold text-ink" />,
+        <HistoryValue key="old" tone="old" />,
+        <HistoryValue key="new" tone="new" />,
+      ]}
+    />
+  )
 }
 
 function TimelineItem({ item, final }: { item: BookHistoryItem; final: boolean }) {

@@ -10,7 +10,7 @@ import { Input } from '../../components/ui/input'
 import { formatDate, formatNumber } from '../../i18n'
 import { useDebounce } from '../../hooks/use-debounce'
 import { cn } from '../../lib/utils'
-import { CreateBookDialog } from './create-book-dialog'
+import { CreateBookDialog } from './components/create-book-dialog'
 import { parseBooksSearchParams, serializeBooksUrlState } from './search-params'
 
 function pageNumbers(current: number, total: number) {
@@ -20,11 +20,11 @@ function pageNumbers(current: number, total: number) {
 }
 
 export function BooksPage() {
-  const { t, i18n } = useTranslation()
-  const [searchParams, setSearchParams] = useSearchParams()
   const [createOpen, setCreateOpen] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
   const parsed = parseBooksSearchParams(searchParams)
   const [searchText, setSearchText] = useState(parsed.value.search)
+  const { t, i18n } = useTranslation()
   const debouncedSearch = useDebounce(searchText.trim(), 400)
   const lastUrlSearch = useRef(parsed.value.search)
   const syncingFromUrl = useRef(false)

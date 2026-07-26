@@ -1,20 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { BookForm } from '../../components/book-form'
-import type { BookFormValues } from '../../components/book-form'
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../components/ui/dialog'
-import { useCreateBook } from '../../api/books/hooks'
-
-interface CreateBookDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
+import { useCreateBook } from '../../../api/books/hooks'
+import { BookForm, type BookFormValues } from '../../../components/book-form'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '../../../components/ui/dialog'
 
 const emptyBook: BookFormValues = {
   title: '',
   shortDescription: '',
   publishDate: '',
   authors: [''],
+}
+
+interface CreateBookDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export function CreateBookDialog({ open, onOpenChange }: CreateBookDialogProps) {

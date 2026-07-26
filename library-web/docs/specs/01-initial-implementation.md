@@ -12,7 +12,7 @@ shapes and [`../../CONTEXT.md`](../../CONTEXT.md) defines product language.
 | --- | --- |
 | `/` | Redirect to `/books` |
 | `/books` | Search and numbered Book pages, with Book creation in a modal |
-| `/books/:bookId` | Current Book details, inline editing, and history |
+| `/books/:bookId` | Current Book details, modal editing, and history |
 
 Unknown routes show a useful not-found screen. Invalid Book IDs never trigger an
 API request.
@@ -38,12 +38,12 @@ API request.
 - **WEB-006:** A successful create caches the returned Book and ETag, then
   navigates to `/books/{id}`.
 - **WEB-007:** The detail route shows the complete current representation and
-  allows editing in the same page with a Formik form and Yup validation. Book
+  opens editing in a modal with a Formik form and Yup validation. Book
   History appears below the current Book information.
 
 ### Replace safely
 
-- **WEB-008:** The inline edit form starts from one Book response and retains
+- **WEB-008:** The modal edit form starts from one Book response and retains
   that response's exact ETag.
 - **WEB-009:** Update sends every editable field with `If-Match`; a successful
   response replaces cached Book data and ETag.
@@ -90,6 +90,6 @@ sorting, offline mutation, and realtime updates are not part of this delivery.
 1. Root providers, two-route shell, theme tokens, shadcn/ui foundation, HTTP
    client, test harness, and English/German localization.
 2. Typed Book API, query keys, searchable numbered table, and create modal.
-3. Detail page and concurrency-safe inline Formik/Yup edit flow.
+3. Detail page and concurrency-safe modal Formik/Yup edit flow.
 4. Cursor-paged timeline, filters, localized change descriptions, accessibility
    pass, behavior tests, error recovery, and responsive verification.

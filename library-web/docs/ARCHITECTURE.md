@@ -17,14 +17,24 @@ src/
       update-book.ts      # PUT /api/books/:id and its input/output DTOs
       get-book-history.ts # GET /api/books/:id/history and its query/output DTOs
   components/
+    book-form.tsx         # shared Formik field layout and validation feedback
     ui/                   # local shadcn/ui primitives
   hooks/
     use-debounce.ts       # reusable delayed-value hook for reactive inputs
   pages/
     books/
-      index.tsx
+      index.tsx           # Books route component implementation
+      search-params.ts
+      components/
+        create-book-dialog.tsx
     book-details/
-      index.tsx
+      index.tsx           # Book Details route component implementation
+      history-search-params.ts
+      components/
+        edit-book-dialog.tsx
+        history-section.tsx
+    not-found/
+      index.tsx           # Not Found route component implementation
   types/
     book.ts               # shared Book entity interfaces
   router.tsx              # complete route configuration
@@ -32,9 +42,12 @@ src/
   index.css               # Tailwind import, theme variables, and global styles
 ```
 
-Every page has its own folder and an `index.tsx`. A complex component used by
-only one page stays inside that page folder. Move it to `components/` only when
-it is actually reused and agnostic.
+Every page has its own folder and implements its route component directly in
+`index.tsx`; the entry file must not re-export that implementation from another
+component. Put auxiliary React components owned by that page in its
+`components/` subfolder. Keep non-React page modules, such as search-param
+parsing, in the page folder. Move a component to the shared `src/components/`
+folder only when it is actually reused across pages and page-agnostic.
 
 Keep shared entity interfaces, such as `Book`, in `types/`. Each API operation
 has its own file. Define its function, query inputs, request DTO, and response DTO
@@ -51,9 +64,22 @@ not-found, and unexpected-error states. Use router APIs for links and navigation
 
 - Put shadcn/ui primitives in `components/ui`.
 - Put other reused components directly in `components`.
-- Keep one-page components in that page's folder.
+- Implement each route component in `pages/<page>/index.tsx`.
+- Put auxiliary one-page React components in `pages/<page>/components`.
 - Extract a component only when it makes a complex page easier to understand or
   when it is reused.
+
+Within every React component, organize declarations in this order:
+
+1. `useState` hooks.
+2. Other hooks, followed by `useEffect` and other effect hooks.
+3. Handler and helper functions.
+4. Conditional returns.
+5. The final render.
+
+When a state initializer requires a value returned by another hook, keep that
+dependency immediately before the state declaration, then continue with the
+same order. Derived values may stay beside the hook or state they describe.
 
 ## Hooks
 

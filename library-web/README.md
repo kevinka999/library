@@ -37,26 +37,12 @@ The development server prints its local browser URL, normally
 
 ## Verification
 
-Run the behavior tests once:
-
-```sh
-pnpm test -- --run
-```
-
-Run tests interactively while developing:
-
-```sh
-pnpm test:watch
-```
-
-Before delivery, run all repository checks:
+Before delivery, run the repository checks:
 
 ```sh
 pnpm lint
-pnpm test -- --run
 pnpm build
 ```
 
-The behavior suite uses MSW and does not require a running API. Manual browse,
-create, edit, optimistic-concurrency, and history checks do require the API and
-appropriate seed data.
+Manual browse, create, edit, optimistic-concurrency, and history checks require
+the API and appropriate seed data.

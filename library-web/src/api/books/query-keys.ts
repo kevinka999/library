@@ -9,10 +9,10 @@ export const bookKeys = {
   details: () => [...bookKeys.all, 'detail'] as const,
   detail: (id: number) => [...bookKeys.details(), id] as const,
   histories: () => [...bookKeys.all, 'history'] as const,
+  historiesForBook: (id: number) => [...bookKeys.histories(), id] as const,
   history: (id: number, filters: BookHistoryFilters) =>
     [
-      ...bookKeys.histories(),
-      id,
+      ...bookKeys.historiesForBook(id),
       filters.changedFields,
       filters.changedFrom,
       filters.changedBefore,
