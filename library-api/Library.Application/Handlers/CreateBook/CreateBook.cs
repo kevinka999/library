@@ -2,7 +2,13 @@ using Library.Application.Abstractions;
 using Library.Application.Common;
 using Library.Domain.Books;
 
-namespace Library.Application.Books.CreateBook;
+namespace Library.Application.Handlers.CreateBook;
+
+public sealed record CreateBookCommand(
+    string? Title,
+    string? ShortDescription,
+    DateOnly? PublishDate,
+    IReadOnlyCollection<string?>? Authors);
 
 public sealed class CreateBookHandler(
     IBookRepository bookRepository,
@@ -11,7 +17,7 @@ public sealed class CreateBookHandler(
     IClock clock,
     IChangeSetIdGenerator changeSetIdGenerator)
 {
-    public async Task<Result<BookDto>> HandleAsync(
+    public async Task<Result<BookResult>> HandleAsync(
         CreateBookCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -26,7 +32,7 @@ public sealed class CreateBookHandler(
         }
         catch (BookValidationException exception)
         {
-            return Result<BookDto>.Failure(ApplicationError.Validation(
+            return Result<BookResult>.Failure(ApplicationError.Validation(
                 "book.validation_failed",
                 "One or more Book fields are invalid.",
                 exception.Errors));
@@ -46,6 +52,6 @@ public sealed class CreateBookHandler(
         bookChangeRepository.AddRange(changes);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result<BookDto>.Success(BookDto.FromDomain(book));
+        return Result<BookResult>.Success(BookResult.FromDomain(book));
     }
 }

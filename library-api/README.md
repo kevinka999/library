@@ -2,9 +2,10 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-The runnable Clean Architecture foundation and Book creation vertical slice are
-implemented. `POST /api/books` stores the normalized Book and its complete
-initial Change Set atomically in PostgreSQL.
+The runnable Clean Architecture foundation and Book creation and retrieval
+vertical slices are implemented. `POST /api/books` stores the normalized Book
+and its complete initial Change Set atomically in PostgreSQL.
+`GET /api/books/{id}` returns its current state and version-backed ETag.
 
 ## Documentation
 
@@ -164,3 +165,12 @@ curl --include http://localhost:5168/api/books \
 
 A successful response is `201 Created`, includes `Location: /api/books/{id}`
 and `ETag: "1"`, and returns the complete normalized Book.
+
+Retrieve the created Book using the path from the `Location` header:
+
+```sh
+curl --include http://localhost:5168/api/books/1
+```
+
+An existing Book returns `200 OK`, its complete current representation, and its
+current ETag. An unknown ID returns `404 application/problem+json`.

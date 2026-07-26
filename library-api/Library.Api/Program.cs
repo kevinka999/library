@@ -23,13 +23,8 @@ builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options 
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
-builder.Services.AddOpenApi(
-    openApiDocumentName,
-    options =>
-    {
-        options.AddSchemaTransformer<CreateBookSchemaTransformer>();
-        options.AddOperationTransformer<CreateBookOpenApiTransformer>();
-    });
+builder.Services.AddOpenApi(openApiDocumentName, options =>
+    options.AddOperationTransformer<ETagOpenApiTransformer>());
 
 builder.Services.AddCors(options =>
 {

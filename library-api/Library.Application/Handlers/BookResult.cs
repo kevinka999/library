@@ -1,8 +1,8 @@
-using Library.Application.Books;
+using Library.Domain.Books;
 
-namespace Library.Api.Books;
+namespace Library.Application.Handlers;
 
-public sealed record BookResponse(
+public sealed record BookResult(
     long Id,
     string Title,
     string ShortDescription,
@@ -10,7 +10,7 @@ public sealed record BookResponse(
     IReadOnlyList<string> Authors,
     long Version)
 {
-    public static BookResponse FromApplication(BookDto book) =>
+    public static BookResult FromDomain(Book book) =>
         new(
             book.Id,
             book.Title,

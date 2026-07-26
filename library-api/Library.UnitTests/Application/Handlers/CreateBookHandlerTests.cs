@@ -1,8 +1,8 @@
 using Library.Application.Abstractions;
-using Library.Application.Books.CreateBook;
+using Library.Application.Handlers.CreateBook;
 using Library.Domain.Books;
 
-namespace Library.UnitTests.Application.Books;
+namespace Library.UnitTests.Application.Handlers;
 
 public sealed class CreateBookHandlerTests
 {

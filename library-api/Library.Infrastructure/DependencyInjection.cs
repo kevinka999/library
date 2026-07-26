@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddDbContext<LibraryDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<BookRepository>();
         services.AddScoped<IBookRepository>(provider => provider.GetRequiredService<BookRepository>());
+        services.AddScoped<IBookReader, BookReader>();
         services.AddScoped<BookChangeRepository>();
         services.AddScoped<IBookChangeRepository>(
             provider => provider.GetRequiredService<BookChangeRepository>());

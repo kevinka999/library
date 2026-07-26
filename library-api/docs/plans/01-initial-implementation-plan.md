@@ -23,7 +23,7 @@ checks are marked complete.
 - [x] Decision gate complete
 - [x] Slice 1 — Runnable API foundation
 - [x] Slice 2 — Create a Book
-- [ ] Slice 3 — Retrieve a Book
+- [x] Slice 3 — Retrieve a Book
 - [ ] Slice 4 — Replace a Book safely
 - [ ] Slice 5 — Search and page Books
 - [ ] Slice 6 — Browse Book History
@@ -94,8 +94,10 @@ replace the proposed value in this document before checking it.
 - Add a stable `code` extension to Problem Details for programmatic handling.
 - Use one validation Problem Details response containing all detected input
   errors.
-- Add concrete request, success, and failure examples to OpenAPI while the
-  affected endpoint is implemented.
+- Generate endpoint schemas and descriptions from API DTOs, response metadata,
+  and XML comments.
+- Use focused reusable transformers only for contract metadata that ASP.NET
+  cannot express directly, such as the `ETag` response header.
 
 - [x] D-002 accepted or replaced with an explicit alternative
 
@@ -385,43 +387,43 @@ results.
 
 #### Application and persistence
 
-- [ ] Add the Get Book query, result, and handler
-- [ ] Add or extend the focused Book read abstraction without introducing a
+- [x] Add the Get Book query, result, and handler
+- [x] Add or extend the focused Book read abstraction without introducing a
   generic repository
-- [ ] Return an explicit not-found result
-- [ ] Implement an efficient no-tracking current-state query
-- [ ] Do not load Book History
+- [x] Return an explicit not-found result
+- [x] Implement an efficient no-tracking current-state query
+- [x] Do not load Book History
 
 #### HTTP endpoint
 
-- [ ] Add `GET /api/books/{id}`
-- [ ] Return the complete Book and its version-backed ETag
-- [ ] Map a missing Book to the agreed `404` Problem Details
-- [ ] Document the endpoint, ETag, success body, and failure body in OpenAPI
+- [x] Add `GET /api/books/{id}`
+- [x] Return the complete Book and its version-backed ETag
+- [x] Map a missing Book to the agreed `404` Problem Details
+- [x] Document the endpoint, ETag, success body, and failure body in OpenAPI
 
 #### Tests
 
-- [ ] Test an existing Book result
-- [ ] Test the not-found result
-- [ ] Test that history is not requested or loaded
-- [ ] Test pure success and not-found HTTP mapping
+- [x] Test an existing Book result
+- [x] Test the not-found result
+- [x] Test that history is not requested or loaded
+- [x] Test pure success and not-found HTTP mapping
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] Retrieving a Book created in Slice 2 returns `200`, its complete normalized
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] Retrieving a Book created in Slice 2 returns `200`, its complete normalized
   representation, and ETag `"1"`
-- [ ] Retrieving an unknown ID returns `404 application/problem+json`
-- [ ] The current-state query does not load Book Changes
-- [ ] OpenAPI documents both results and the ETag response header
+- [x] Retrieving an unknown ID returns `404 application/problem+json`
+- [x] The current-state query does not load Book Changes
+- [x] OpenAPI documents both results and the ETag response header
 
 ### Pre-commit review
 
-- [ ] Confirm the controller contains only transport translation
-- [ ] Confirm the read abstraction is use-case-focused
-- [ ] Confirm no Book History navigation was introduced
-- [ ] Mark Slice 3 complete in [Progress](#progress)
+- [x] Confirm the controller contains only transport translation
+- [x] Confirm the read abstraction is use-case-focused
+- [x] Confirm no Book History navigation was introduced
+- [x] Mark Slice 3 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): retrieve books by id`
 
