@@ -34,7 +34,7 @@ Domain code contains no HTTP, database, request-model, or serialization concerns
 
 ### Application
 
-Application organizes behavior vertically by use case:
+Application organizes behavior vertically by use case under `Handlers`:
 
 - Create Book
 - Update Book
@@ -43,9 +43,11 @@ Application organizes behavior vertically by use case:
 - Get Book History
 
 Each feature keeps its input, handler, and feature-specific validation together.
-Application DTOs describe reusable output shapes and are shared across use cases
-when those use cases return the same representation. History is a separate
-feature: clients load a Book and request its history independently.
+Application result models describe reusable output shapes and are shared across
+use cases when those use cases return the same representation. Each API entry
+point has its own folder under `Controllers`; its input and output DTOs remain
+beside its controller. History is a separate feature: clients load a Book and
+request its history independently.
 
 `Application/Abstractions` contains the small set of outbound contracts required by the use cases. These contracts express application needs and must not expose EF Core types or become generic CRUD repositories.
 

@@ -191,7 +191,7 @@ the implementation plan; it does not redefine those documents.
 - Target .NET 10 and retain the controller-based ASP.NET Core API style.
 - Implement the Domain, Application, Infrastructure, and API project boundaries
   from [`../ARCHITECTURE.md`](../ARCHITECTURE.md), plus one unit-test project.
-- Organize the Application use cases under Books as Create Book, Update Book, Get
+- Organize the Application use cases under Handlers as Create Book, Update Book, Get
   Book, Search Books, and Get Book History.
 - Keep focused persistence, history-reading, and unit-of-work contracts in
   `Application/Abstractions`; do not introduce a generic CRUD repository.
@@ -203,8 +203,8 @@ the implementation plan; it does not redefine those documents.
   Infrastructure record, including when their fields currently coincide.
 - Inject concrete Application handlers into controllers without a mediator library.
 - Represent expected Application outcomes with a small explicit Result type.
-- Reuse an Application `BookDto` across use cases that return the same complete
-  Book representation; do not create operation-specific DTOs with identical
+- Reuse an Application `BookResult` across use cases that return the same complete
+  Book representation; do not create operation-specific result models with identical
   fields.
 - Use Domain constructors and methods rather than FluentValidation. Domain
   objects guard their own invariants and may report invalid construction through
@@ -320,7 +320,7 @@ the affected implementation task begins:
    Version maps to it, and whether wildcard or multiple `If-Match` values are
    accepted.
 2. **HTTP schemas:** Define concrete request, success-response, and Problem Details
-   examples, including JSON property naming and any stable application error
+   schemas, including JSON property naming and any stable application error
    codes or extensions.
 3. **Unknown query parameters:** Decide whether endpoints reject parameters
    outside their documented query contract or ignore them.
