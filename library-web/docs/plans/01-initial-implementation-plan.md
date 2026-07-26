@@ -23,7 +23,7 @@ and do not change `library-api`.
 ## Progress
 
 - [x] Scope decisions confirmed
-- [ ] Slice 1 — Localized application foundation
+- [x] Slice 1 — Localized application foundation
 - [ ] Slice 2 — Search, page, and create Books
 - [ ] Slice 3 — View and safely edit a Book
 - [ ] Slice 4 — Browse Book History and verify the delivery
