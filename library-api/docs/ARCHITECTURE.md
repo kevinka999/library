@@ -123,14 +123,20 @@ A stale update writes neither the Book nor its history.
 
 ### Queries
 
-For Book details, search, and history:
+For Book details and search:
 
 1. API translates route and query parameters into an Application query.
-2. Application requests the required data through an abstraction it owns.
-3. Infrastructure executes and projects the query efficiently.
-4. API returns the Application result without creating presentation text for historical changes.
+2. Application requests Domain Books through `IBookRepository`.
+3. Infrastructure executes the query and maps persistence records to Domain
+   Books.
+4. Application maps Domain Books to its result model.
+5. API translates the Application result to its transport response.
 
-Read-specific projections are allowed when they preserve an Application-owned contract and avoid loading unnecessary Domain state.
+Book persistence does not construct Application result models. The
+`IBookRepository` interface returns Domain Books for both single-Book and paged
+queries; Application handlers own the `Book`-to-`BookResult` transformation.
+Book History remains a separate query because it is not part of the Book
+aggregate.
 
 ## Cross-cutting rules
 

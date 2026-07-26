@@ -21,6 +21,37 @@ internal sealed class BookRepository(LibraryDbContext database) : IBookRepositor
         return record is null ? null : GetDomain(record);
     }
 
+    public async Task<PagedBooks> SearchAsync(
+        string? search,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
+    {
+        var books = database.Books.AsNoTracking();
+
+        if (search is not null)
+        {
+            var pattern = CreateLiteralContainsPattern(search);
+            books = books.Where(book =>
+                EF.Functions.ILike(book.Title, pattern, "\\")
+                || EF.Functions.ILike(book.ShortDescription, pattern, "\\")
+                || book.Authors.Any(author =>
+                    EF.Functions.ILike(author, pattern, "\\")));
+        }
+
+        var totalCount = await books.LongCountAsync(cancellationToken);
+        var records = await books
+            .OrderBy(book => book.Title)
+            .ThenBy(book => book.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToArrayAsync(cancellationToken);
+
+        return new PagedBooks(
+            records.Select(ToDomain).ToArray(),
+            totalCount);
+    }
+
     public void Add(Book book)
     {
         var record = ToPersistence(book);
@@ -84,6 +115,12 @@ internal sealed class BookRepository(LibraryDbContext database) : IBookRepositor
             record.PublishDate,
             record.Authors,
             record.Version);
+
+    private static string CreateLiteralContainsPattern(string search) =>
+        $"%{search
+            .Replace("\\", "\\\\", StringComparison.Ordinal)
+            .Replace("%", "\\%", StringComparison.Ordinal)
+            .Replace("_", "\\_", StringComparison.Ordinal)}%";
 
     private void Track(Book book, BookRecord record)
     {

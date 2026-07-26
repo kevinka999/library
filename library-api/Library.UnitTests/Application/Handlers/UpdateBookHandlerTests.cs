@@ -242,6 +242,13 @@ public sealed class UpdateBookHandlerTests
             return Task.FromResult(book);
         }
 
+        public Task<PagedBooks> SearchAsync(
+            string? search,
+            int page,
+            int pageSize,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public void Add(Book addedBook) => throw new NotSupportedException();
 
         public void Update(Book updatedBook, long expectedVersion)

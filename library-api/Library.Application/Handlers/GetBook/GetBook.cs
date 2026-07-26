@@ -5,18 +5,18 @@ namespace Library.Application.Handlers.GetBook;
 
 public sealed record GetBookQuery(long Id);
 
-public sealed class GetBookHandler(IBookReader bookReader)
+public sealed class GetBookHandler(IBookRepository bookRepository)
 {
     public async Task<Result<BookResult>> HandleAsync(
         GetBookQuery query,
         CancellationToken cancellationToken = default)
     {
-        var book = await bookReader.GetByIdAsync(query.Id, cancellationToken);
+        var book = await bookRepository.GetByIdAsync(query.Id, cancellationToken);
 
         return book is null
             ? Result<BookResult>.Failure(ApplicationError.NotFound(
                 "book.not_found",
                 $"Book {query.Id} was not found."))
-            : Result<BookResult>.Success(book);
+            : Result<BookResult>.Success(BookResult.FromDomain(book));
     }
 }

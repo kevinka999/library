@@ -25,7 +25,7 @@ checks are marked complete.
 - [x] Slice 2 — Create a Book
 - [x] Slice 3 — Retrieve a Book
 - [x] Slice 4 — Replace a Book safely
-- [ ] Slice 5 — Search and page Books
+- [x] Slice 5 — Search and page Books
 - [ ] Slice 6 — Browse Book History
 - [ ] Slice 7 — Delivery verification
 
@@ -388,8 +388,8 @@ results.
 #### Application and persistence
 
 - [x] Add the Get Book query, result, and handler
-- [x] Add or extend the focused Book read abstraction without introducing a
-  generic repository
+- [x] Use the focused Book repository abstraction without introducing a generic
+  repository
 - [x] Return an explicit not-found result
 - [x] Implement an efficient no-tracking current-state query
 - [x] Do not load Book History
@@ -421,7 +421,7 @@ results.
 ### Pre-commit review
 
 - [x] Confirm the controller contains only transport translation
-- [x] Confirm the read abstraction is use-case-focused
+- [x] Confirm the Book repository abstraction is use-case-focused
 - [x] Confirm no Book History navigation was introduced
 - [x] Mark Slice 3 complete in [Progress](#progress)
 
@@ -553,63 +553,63 @@ Books by a case-insensitive term across title, description, and Author Names.
 
 #### Application behavior
 
-- [ ] Add the Search Books query, result models, validator, and handler
-- [ ] Trim an optional search term
-- [ ] Validate one-based page and page-size bounds
-- [ ] Calculate `totalPages` consistently, including an empty result
-- [ ] Add a focused paged Book read abstraction
+- [x] Add the Search Books query, result models, validator, and handler
+- [x] Trim an optional search term
+- [x] Validate one-based page and page-size bounds
+- [x] Calculate `totalPages` consistently, including an empty result
+- [x] Add a focused paged query to the Book repository abstraction
 
 #### PostgreSQL query
 
-- [ ] Implement case-insensitive contains matching for Title and Short Description
-- [ ] Implement case-insensitive any-element contains matching for `text[]`
+- [x] Implement case-insensitive contains matching for Title and Short Description
+- [x] Implement case-insensitive any-element contains matching for `text[]`
   Author Names
-- [ ] Ensure user search text is treated as text rather than as an unescaped SQL
+- [x] Ensure user search text is treated as text rather than as an unescaped SQL
   pattern
-- [ ] Order by Title ascending and then Book ID ascending
-- [ ] Apply count and page projection efficiently without loading history
+- [x] Order by Title ascending and then Book ID ascending
+- [x] Apply count and paging efficiently without loading history
 
 #### HTTP endpoint
 
-- [ ] Add `GET /api/books`
-- [ ] Bind only `search`, `page`, and `pageSize`
-- [ ] Apply the D-003 unknown-parameter policy
-- [ ] Return `items`, `page`, `pageSize`, `totalCount`, and `totalPages`
-- [ ] Map invalid input to the agreed validation Problem Details
-- [ ] Document defaults, limits, search behavior, ordering, and responses in
+- [x] Add `GET /api/books`
+- [x] Bind only `search`, `page`, and `pageSize`
+- [x] Apply the D-003 unknown-parameter policy
+- [x] Return `items`, `page`, `pageSize`, `totalCount`, and `totalPages`
+- [x] Map invalid input to the agreed validation Problem Details
+- [x] Document defaults, limits, search behavior, ordering, and responses in
   OpenAPI
 
 #### Tests
 
-- [ ] Test default paging input
-- [ ] Test valid boundary values
-- [ ] Test zero, negative, and over-limit values
-- [ ] Test search trimming
-- [ ] Test propagation through the read abstraction
-- [ ] Test total-page calculation for empty, partial, and exact-multiple results
-- [ ] Test the D-003 unknown-parameter policy where it can be isolated
+- [x] Test default paging input
+- [x] Test valid boundary values
+- [x] Test zero, negative, and over-limit values
+- [x] Test search trimming
+- [x] Test propagation through the Book repository abstraction
+- [x] Test total-page calculation for empty, partial, and exact-multiple results
+- [x] Test the D-003 unknown-parameter policy where it can be isolated
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] With no query, the endpoint returns page 1 with a page size of 20
-- [ ] Search matches differing case in Title, Short Description, and Author Names
-- [ ] Search terms containing `%`, `_`, quotes, or backslashes are handled as
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] With no query, the endpoint returns page 1 with a page size of 20
+- [x] Search matches differing case in Title, Short Description, and Author Names
+- [x] Search terms containing `%`, `_`, quotes, or backslashes are handled as
   literal user input and do not broaden or break the query
-- [ ] Results remain ordered by Title and Book ID across repeated requests
-- [ ] Response totals are correct for empty, partial, and full pages
-- [ ] Invalid paging returns `400 application/problem+json`
-- [ ] Unknown parameters follow D-003
-- [ ] No Book Changes are loaded by the query
+- [x] Results remain ordered by Title and Book ID across repeated requests
+- [x] Response totals are correct for empty, partial, and full pages
+- [x] Invalid paging returns `400 application/problem+json`
+- [x] Unknown parameters follow D-003
+- [x] No Book Changes are loaded by the query
 
 ### Pre-commit review
 
-- [ ] Inspect generated SQL or database logs for each search target
-- [ ] Confirm search input is parameterized and wildcard behavior is intentional
-- [ ] Confirm deterministic ordering includes the Book ID tie-breaker
-- [ ] Confirm count and page queries use the same filter
-- [ ] Mark Slice 5 complete in [Progress](#progress)
+- [x] Inspect generated SQL or database logs for each search target
+- [x] Confirm search input is parameterized and wildcard behavior is intentional
+- [x] Confirm deterministic ordering includes the Book ID tie-breaker
+- [x] Confirm count and page queries use the same filter
+- [x] Mark Slice 5 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): search and page books`
 

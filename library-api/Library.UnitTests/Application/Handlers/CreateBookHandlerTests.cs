@@ -105,6 +105,13 @@ public sealed class CreateBookHandlerTests
         public Task<Book?> GetByIdAsync(long id, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
+        public Task<PagedBooks> SearchAsync(
+            string? search,
+            int page,
+            int pageSize,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public void Add(Book book)
         {
             Book = book;

@@ -266,7 +266,7 @@ the implementation plan; it does not redefine those documents.
   or history mutation.
 - **TEST-007:** Cover Get Book success and not-found behavior.
 - **TEST-008:** Cover Search Books validation and propagation of search and paging
-  criteria through its read abstraction.
+  criteria through its Book repository abstraction.
 - **TEST-009:** Cover Get Book History existence checks, filters, cursor
   validation, complete Change Set projection, and result propagation.
 - **TEST-010:** Cover expected-result-to-HTTP mapping where it is pure and does

@@ -2,12 +2,14 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-The runnable Clean Architecture foundation and Book creation, retrieval, and
-replacement vertical slices are implemented. `POST /api/books` stores the
-normalized Book and its complete initial Change Set atomically in PostgreSQL.
-`GET /api/books/{id}` returns its current state and version-backed ETag.
-`PUT /api/books/{id}` safely replaces it using `If-Match`, appending one
-complete Change Set only when the normalized state changes.
+The runnable Clean Architecture foundation and Book creation, retrieval,
+replacement, and search vertical slices are implemented. `POST /api/books`
+stores the normalized Book and its complete initial Change Set atomically in
+PostgreSQL. `GET /api/books/{id}` returns its current state and version-backed
+ETag. `PUT /api/books/{id}` safely replaces it using `If-Match`, appending one
+complete Change Set only when the normalized state changes. `GET /api/books`
+returns deterministic numbered pages and optionally searches current Book
+fields.
 
 ## Documentation
 
@@ -135,9 +137,9 @@ dotnet test
 
 The test suite uses xUnit and hand-written fakes. It covers cross-cutting error
 behavior and Book creation and replacement invariants in the Domain, while
-initial-history, update-history, no-op, and optimistic-concurrency behavior are
-exercised through the Application handlers. The project intentionally does not
-require automated integration tests.
+initial-history, update-history, no-op, optimistic-concurrency, and search
+validation and paging behavior are exercised through the Application handlers.
+The project intentionally does not require automated integration tests.
 
 ## Target API
 
@@ -148,7 +150,7 @@ POST /api/books
 PUT  /api/books/{id}
 GET  /api/books/{id}
 GET  /api/books?search=&page=&pageSize=
-GET  /api/books/{id}/history?changedField=&changedFrom=&sortDirection=&cursor=&pageSize=
+GET  /api/books/{id}/history?changedField=&changedFrom=&changedBefore=&sortDirection=&cursor=&limit=
 ```
 
 Updates use the current Book ETag through the `If-Match` header. The history endpoint returns complete Change Sets and structured values so the frontend can generate its own descriptions.
@@ -196,3 +198,16 @@ An effective replacement returns `200 OK` with an advanced ETag and appends one
 Book Change per changed field in a single Change Set. A normalized no-op keeps
 the current version and creates no history. Missing, malformed, and stale
 preconditions return `428`, `400`, and `412` respectively.
+
+Search and page Books:
+
+```sh
+curl 'http://localhost:5168/api/books?search=guin&page=1&pageSize=20'
+```
+
+Search is trimmed and matched case-insensitively within titles, short
+descriptions, and every Author Name. `%`, `_`, quotes, and backslashes are
+treated as literal search text. Paging is one-based, defaults to 20 Books per
+page, and permits at most 100. Results are always ordered by title and then Book
+ID. Unsupported or repeated query parameters and invalid paging values return
+`400 application/problem+json`.
