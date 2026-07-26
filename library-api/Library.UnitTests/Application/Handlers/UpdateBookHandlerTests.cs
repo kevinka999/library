@@ -267,6 +267,11 @@ public sealed class UpdateBookHandlerTests
         {
             Changes = changes;
         }
+
+        public Task<BookHistoryPage> ReadHistoryAsync(
+            BookHistoryCriteria criteria,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     private sealed class RecordingUnitOfWork : IUnitOfWork

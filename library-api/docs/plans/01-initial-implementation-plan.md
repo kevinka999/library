@@ -26,7 +26,7 @@ checks are marked complete.
 - [x] Slice 3 — Retrieve a Book
 - [x] Slice 4 — Replace a Book safely
 - [x] Slice 5 — Search and page Books
-- [ ] Slice 6 — Browse Book History
+- [x] Slice 6 — Browse Book History
 - [ ] Slice 7 — Delivery verification
 
 ## Dependency order
@@ -641,83 +641,84 @@ without splitting a matching Change Set.
 
 #### Application behavior
 
-- [ ] Add the Get Book History query, result models, validator, and handler
-- [ ] Verify Book existence before reading history
-- [ ] Validate limit, sort direction, Changed Fields, UTC bounds, and cursor
-- [ ] Reject an invalid time range
-- [ ] Normalize filters exactly once
-- [ ] Add a focused history read abstraction that returns complete Change Sets
-- [ ] Implement cursor encode/decode as an isolated Application-owned contract
-- [ ] Bind the cursor to every normalized filter and the sort direction
+- [x] Add the Get Book History query, result models, validator, and handler
+- [x] Verify Book existence before reading history
+- [x] Validate limit, sort direction, Changed Fields, UTC bounds, and cursor
+- [x] Reject an invalid time range
+- [x] Normalize filters exactly once
+- [x] Add a focused history read method to the Book Change repository abstraction
+  that returns complete Change Sets
+- [x] Implement cursor encode/decode as an isolated Application-owned contract
+- [x] Bind the cursor to every normalized filter and the sort direction
 
 #### PostgreSQL query
 
-- [ ] Add indexes supporting Book ID, Changed At, Change Set ID, and Changed Field
-- [ ] Select matching Change Set IDs before projecting their complete changes
-- [ ] Apply repeated Changed Field filters with any-match semantics
-- [ ] Apply inclusive `changedFrom` and exclusive `changedBefore`
-- [ ] Apply keyset comparison consistently for ascending and descending order
-- [ ] Use Changed At and Change Set ID as the complete cursor key
-- [ ] Fetch one extra Change Set to determine `hasMore`
-- [ ] Return at most `limit` complete Change Sets
-- [ ] Keep change ordering within a Change Set deterministic
-- [ ] Generate and inspect the index migration
+- [x] Add indexes supporting Book ID, Changed At, Change Set ID, and Changed Field
+- [x] Select matching Change Set IDs before projecting their complete changes
+- [x] Apply repeated Changed Field filters with any-match semantics
+- [x] Apply inclusive `changedFrom` and exclusive `changedBefore`
+- [x] Apply keyset comparison consistently for ascending and descending order
+- [x] Use Changed At and Change Set ID as the complete cursor key
+- [x] Fetch one extra Change Set to determine `hasMore`
+- [x] Return at most `limit` complete Change Sets
+- [x] Keep change ordering within a Change Set deterministic
+- [x] Inspect the supporting indexes already generated in the initial migration
 
 #### HTTP endpoint
 
-- [ ] Add `GET /api/books/{id}/history`
-- [ ] Bind repeated `changedField`, `changedFrom`, `changedBefore`,
+- [x] Add `GET /api/books/{id}/history`
+- [x] Bind repeated `changedField`, `changedFrom`, `changedBefore`,
   `sortDirection`, `limit`, and `after`
-- [ ] Apply the D-003 unknown-parameter policy
-- [ ] Return `items`, `nextCursor`, and `hasMore`
-- [ ] Represent Changed At once per item and changes as a nested collection
-- [ ] Preserve natural JSON types for old and new values
-- [ ] Return `404` for a missing Book
-- [ ] Return `400` for invalid filters, ranges, cursors, or cursor/query mismatch
-- [ ] Document filters, defaults, cursor opacity, schemas, and responses in
+- [x] Apply the D-003 unknown-parameter policy
+- [x] Return `items`, `nextCursor`, and `hasMore`
+- [x] Represent Changed At once per item and changes as a nested collection
+- [x] Preserve natural JSON types for old and new values
+- [x] Return `404` for a missing Book
+- [x] Return `400` for invalid filters, ranges, cursors, or cursor/query mismatch
+- [x] Document filters, defaults, cursor opacity, schemas, and responses in
   OpenAPI
 
 #### Tests
 
-- [ ] Test missing Book without invoking the history reader
-- [ ] Test default and boundary limits
-- [ ] Test ascending and descending propagation
-- [ ] Test inclusive lower and exclusive upper time bounds
-- [ ] Test repeated Changed Field normalization and any-match behavior
-- [ ] Test valid cursor round-trip
-- [ ] Test malformed, unsupported-version, and incompatible cursors
-- [ ] Test complete Change Set projection when only one nested change matches a
+- [x] Test missing Book without querying history through the Book Change repository
+- [x] Test default and boundary limits
+- [x] Test ascending and descending propagation
+- [x] Test inclusive lower and exclusive upper time bounds
+- [x] Test repeated Changed Field normalization and any-match behavior
+- [x] Test valid cursor round-trip
+- [x] Test malformed, unsupported-version, and incompatible cursors
+- [x] Test complete Change Set projection when only one nested change matches a
   field filter
-- [ ] Test `nextCursor` and `hasMore` result propagation
+- [x] Test `nextCursor` and `hasMore` result propagation
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] Missing Book history returns `404`, not an empty page
-- [ ] Default history returns at most 20 complete Change Sets newest-first
-- [ ] Ascending history returns the same qualifying Change Sets in reverse
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] Missing Book history returns `404`, not an empty page
+- [x] Default history returns at most 20 complete Change Sets newest-first
+- [x] Ascending history returns the same qualifying Change Sets in reverse
   chronological order
-- [ ] No Change Set is split between pages
-- [ ] Following `nextCursor` produces no duplicate or omitted Change Set in a
+- [x] No Change Set is split between pages
+- [x] Following `nextCursor` produces no duplicate or omitted Change Set in a
   stable dataset
-- [ ] Inserting a newer Change Set does not destabilize traversal from an existing
+- [x] Inserting a newer Change Set does not destabilize traversal from an existing
   descending cursor
-- [ ] A Changed Field match returns every Book Change in the matching Change Set
-- [ ] Time filters obey inclusive-from and exclusive-before boundaries
-- [ ] Invalid and incompatible cursors return `400`
-- [ ] Response old and new values retain string, date-string, null, and array
+- [x] A Changed Field match returns every Book Change in the matching Change Set
+- [x] Time filters obey inclusive-from and exclusive-before boundaries
+- [x] Invalid and incompatible cursors return `400`
+- [x] Response old and new values retain string, date-string, null, and array
   JSON shapes
-- [ ] Query plans use the intended history indexes on a representative dataset
+- [x] Query plans use the intended history indexes on a representative dataset
 
 ### Pre-commit review
 
-- [ ] Inspect ascending and descending keyset predicates for symmetry
-- [ ] Confirm pagination counts Change Sets rather than Book Change rows
-- [ ] Confirm every filter is included in cursor compatibility validation
-- [ ] Confirm malformed cursor contents never become trusted query input
-- [ ] Inspect filtered results directly against PostgreSQL rows
-- [ ] Mark Slice 6 complete in [Progress](#progress)
+- [x] Inspect ascending and descending keyset predicates for symmetry
+- [x] Confirm pagination counts Change Sets rather than Book Change rows
+- [x] Confirm every filter is included in cursor compatibility validation
+- [x] Confirm malformed cursor contents never become trusted query input
+- [x] Inspect filtered results directly against PostgreSQL rows
+- [x] Mark Slice 6 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): query complete book change sets`
 

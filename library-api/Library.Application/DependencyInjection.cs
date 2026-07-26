@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Library.Application.Handlers.CreateBook;
 using Library.Application.Handlers.GetBook;
+using Library.Application.Handlers.GetBookHistory;
 using Library.Application.Handlers.SearchBooks;
 using Library.Application.Handlers.UpdateBook;
 
@@ -12,6 +13,8 @@ public static class DependencyInjection
     {
         services.AddScoped<CreateBookHandler>();
         services.AddScoped<GetBookHandler>();
+        services.AddScoped<GetBookHistoryHandler>();
+        services.AddSingleton<BookHistoryCursorCodec>();
         services.AddScoped<SearchBooksHandler>();
         services.AddScoped<UpdateBookHandler>();
 
