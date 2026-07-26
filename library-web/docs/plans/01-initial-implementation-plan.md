@@ -25,7 +25,7 @@ and do not change `library-api`.
 - [x] Scope decisions confirmed
 - [x] Slice 1 — Localized application foundation
 - [x] Slice 2 — Search, page, and create Books
-- [ ] Slice 3 — View and safely edit a Book
+- [x] Slice 3 — View and safely edit a Book
 - [ ] Slice 4 — Browse Book History and verify the delivery
 
 ## Dependency order

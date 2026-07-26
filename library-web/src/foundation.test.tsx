@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { apiClient, normalizeApiError } from './api/client'
 import { i18n, LANGUAGE_STORAGE_KEY, resolveInitialLanguage } from './i18n'
 import { renderApp } from './test/render-app'
+import { server } from './test/server'
+import { http, HttpResponse } from 'msw'
 
 describe('application foundation', () => {
   beforeEach(async () => {
@@ -60,9 +62,24 @@ describe('application foundation', () => {
   })
 
   it('keeps valid book routes inside the application shell', async () => {
+    server.use(
+      http.get('http://localhost:5168/api/books/12', () =>
+        HttpResponse.json(
+          {
+            id: 12,
+            title: 'Route Book',
+            shortDescription: 'Description',
+            publishDate: '2020-01-01',
+            authors: ['Author'],
+            version: 1,
+          },
+          { headers: { ETag: '"v1"' } },
+        ),
+      ),
+    )
     renderApp(['/books/12'])
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Books #12' })).toBeVisible()
+      expect(screen.getByRole('heading', { name: 'Route Book' })).toBeVisible()
     })
     expect(screen.getByRole('link', { name: /Library/ })).toBeVisible()
   })

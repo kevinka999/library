@@ -21,6 +21,9 @@ interface BookFormProps {
   pendingLabel: string
   onSubmit: (values: BookFormValues) => Promise<void>
   onCancel?: () => void
+  confirmCancelWhenDirty?: boolean
+  onReloadCurrent?: () => void
+  onApiError?: (error: ApiError) => void
 }
 
 function apiFieldPath(key: string): string | null {
@@ -38,6 +41,9 @@ export function BookForm({
   pendingLabel,
   onSubmit,
   onCancel,
+  confirmCancelWhenDirty = false,
+  onReloadCurrent,
+  onApiError,
 }: BookFormProps) {
   const { t } = useTranslation()
   const schema = Yup.object({
@@ -62,6 +68,7 @@ export function BookForm({
       await onSubmit(values)
     } catch (error) {
       if (error instanceof ApiError && error.kind === 'validation') {
+        onApiError?.(error)
         let unmatched = 0
         for (const [key] of Object.entries(error.fieldErrors)) {
           const path = apiFieldPath(key)
@@ -72,6 +79,7 @@ export function BookForm({
           helpers.setStatus('validation')
         }
       } else if (error instanceof ApiError) {
+        onApiError?.(error)
         helpers.setStatus(error.kind)
       } else {
         helpers.setStatus('unexpected')
@@ -81,7 +89,7 @@ export function BookForm({
 
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={submit}>
-      {({ errors, touched, isSubmitting, status }) => (
+      {({ errors, touched, isSubmitting, status, dirty }) => (
         <Form className="mt-6 space-y-5" noValidate>
           <div>
             <Label htmlFor="title">{t('forms.title')}</Label>
@@ -153,12 +161,32 @@ export function BookForm({
           </FieldArray>
           {status && (
             <div role="alert" className="rounded-lg bg-danger-soft p-3 text-sm text-danger">
-              {t(`errors.${status === 'validation' ? 'validation' : status}`)}
+              <p>{t(`errors.${status === 'validation' ? 'validation' : status}`)}</p>
+              {status === 'stale' && onReloadCurrent && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="small"
+                  className="mt-3"
+                  onClick={() => {
+                    if (!dirty || window.confirm(t('forms.reloadConfirm'))) onReloadCurrent()
+                  }}
+                >
+                  {t('forms.reloadCurrent')}
+                </Button>
+              )}
             </div>
           )}
           <div className="flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:justify-end">
             {onCancel && (
-              <Button type="button" variant="secondary" onClick={onCancel} disabled={isSubmitting}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  if (!confirmCancelWhenDirty || !dirty || window.confirm(t('forms.discardConfirm'))) onCancel()
+                }}
+                disabled={isSubmitting}
+              >
                 {t('common.cancel')}
               </Button>
             )}
