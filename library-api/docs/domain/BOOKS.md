@@ -13,7 +13,13 @@ A Book is the current state of a published work. It has:
 - A non-empty unordered collection of author names.
 - A version used for optimistic concurrency.
 
-Book owns its invariants and determines whether a requested replacement is an effective change. Application code coordinates loading and persistence but must not reproduce these business rules.
+Book owns its current-state invariants and determines whether a requested
+replacement is an effective change. Its public constructor validates every
+supplied field before accepting state and reports all invalid fields in one
+validation exception. Successful construction produces only valid, normalized
+current state; the Book does not create or own its historical records.
+Application code coordinates lifecycle-specific history and persistence without
+reproducing Book invariants.
 
 ### Title
 
@@ -84,7 +90,16 @@ It records:
 
 Previous and new values preserve their natural JSON shape. Text fields use JSON strings, the publication date uses a date string, and author names use a JSON array. The API returns these values as data and does not generate presentation descriptions such as “Title was changed to The Hobbit.”
 
+Application supplies these as their natural CLR values (`string`, `DateOnly`,
+or a string collection). Infrastructure converts those values to `jsonb`; the
+Domain does not require a separate wrapper hierarchy for change values.
+
 Book Changes are append-only and cannot be edited or deleted.
+
+Application use cases create Book Changes when their workflows require history.
+In particular, the Create Book use case records the initial field values after
+the Domain has produced a valid Book. This creation policy is not behavior of
+the Book entity.
 
 ## Change Set
 
@@ -95,7 +110,8 @@ A Change Set groups every Book Change produced by one successful creation or upd
 - A no-op update produces no Change Set.
 - A Change Set is treated as one complete history item and must not be split across cursor pages.
 
-Creation records the initial values as one Change Set. Each populated Book field receives its own Book Change.
+The Create Book use case records the initial values as one Change Set. Each
+populated Book field receives its own Book Change.
 
 ## Book History
 
@@ -111,4 +127,3 @@ History behavior includes:
 When a changed-field filter matches one Book Change, the entire containing Change Set is returned. This preserves the full meaning of the user action that produced it.
 
 Grouping by Change Set is built into the history representation. No additional user-selectable grouping behavior is required.
-

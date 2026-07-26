@@ -22,7 +22,7 @@ checks are marked complete.
 
 - [x] Decision gate complete
 - [x] Slice 1 — Runnable API foundation
-- [ ] Slice 2 — Create a Book
+- [x] Slice 2 — Create a Book
 - [ ] Slice 3 — Retrieve a Book
 - [ ] Slice 4 — Replace a Book safely
 - [ ] Slice 5 — Search and page Books
@@ -264,90 +264,101 @@ Book, its location, and version-backed ETag.
 
 #### Domain behavior
 
-- [ ] Implement the Book identity, current state, and Version
-- [ ] Implement Title, Short Description, Publish Date, and Author Name
+- [x] Implement the Book identity, current state, and Version
+- [x] Implement Title, Short Description, Publish Date, and Author Name
   invariants from [`../domain/BOOKS.md`](../domain/BOOKS.md)
-- [ ] Normalize whitespace and deterministic Author Name ordering
-- [ ] Reject duplicate Author Names case-insensitively while preserving display
+- [x] Normalize whitespace and deterministic Author Name ordering
+- [x] Reject duplicate Author Names case-insensitively while preserving display
   casing
-- [ ] Implement stable Changed Field values
-- [ ] Implement immutable Book Change data
-- [ ] Create exactly one initial Book Change per Book field
-- [ ] Give all initial Book Changes one generated Change Set ID and one UTC
-  Changed At value
-- [ ] Keep Book History outside the Book aggregate
+- [x] Implement immutable Book Change data
+- [x] Keep Book creation focused on valid normalized current state without
+  producing history
+- [x] Keep Book History outside the Book aggregate
 
 #### Application behavior
 
-- [ ] Add the Create Book command, input, result, validator, and handler
-- [ ] Add only the persistence, unit-of-work, clock, and ID-generation
-  abstractions required by creation
-- [ ] Validate all input before accepting any state
-- [ ] Return explicit validation outcomes rather than expected exceptions
-- [ ] Commit the Book and initial Book Changes atomically
+- [x] Add the Create Book command, input, shared Book DTO, result, and handler
+- [x] Add focused Book and Book Change repositories plus the unit-of-work,
+  clock, and ID-generation abstractions required by creation
+- [x] Validate all input in the Book constructor before accepting any state
+- [x] Translate the Book validation exception into the explicit Application
+  validation result
+- [x] Create exactly one initial Book Change per Book field in the Create Book
+  handler
+- [x] Give all initial Book Changes one generated Change Set ID and one UTC
+  Changed At value
+- [x] Stage the Book and Book Changes through separate repositories
+- [x] Commit the Book and initial Book Changes atomically
 
 #### PostgreSQL infrastructure
 
-- [ ] Add EF Core 10 and the compatible Npgsql provider
-- [ ] Map `Books` and `BookChanges` as the only domain tables
-- [ ] Map Author Names to `text[]`
-- [ ] Map old and new Book Change values to `jsonb`
-- [ ] Configure identity IDs, UUID Change Set IDs, UTC timestamps, Version, stable
+- [x] Add EF Core 10 and the compatible Npgsql provider
+- [x] Map `Books` and `BookChanges` as the only domain tables
+- [x] Map Domain Books and Book Changes through data-only Infrastructure records
+- [x] Map Author Names to `text[]`
+- [x] Map old and new Book Change values to `jsonb`
+- [x] Map Domain Book Fields to stable persistence strings
+- [x] Keep `ToPersistence` and `ToDomain` mappings private to each concrete
+  repository
+- [x] Keep persistence record types data-only
+- [x] Organize configurations, records, repositories, and migrations separately
+- [x] Synchronize the database-generated Book ID after the Unit of Work commits
+- [x] Configure identity IDs, UUID Change Set IDs, UTC timestamps, Version, stable
   Changed Field strings, and required constraints
-- [ ] Add the foreign key and one-change-per-field-per-Change-Set constraint
-- [ ] Generate and commit the initial migration
-- [ ] Add Docker Compose for PostgreSQL 18 with a named volume
-- [ ] Add safe configuration examples without committing credentials
-- [ ] Apply pending migrations automatically only in Development
+- [x] Add the foreign key and one-change-per-field-per-Change-Set constraint
+- [x] Generate and commit the initial migration
+- [x] Add Docker Compose for PostgreSQL 18 with a named volume
+- [x] Add safe configuration examples without committing credentials
+- [x] Apply pending migrations automatically only in Development
 
 #### HTTP endpoint
 
-- [ ] Add the create request and Book response contracts
-- [ ] Add `POST /api/books`
-- [ ] Map validation results to the agreed Problem Details contract
-- [ ] Return `201 Created`, `Location`, the complete Book, and ETag
-- [ ] Document the endpoint, schemas, headers, and responses in OpenAPI
+- [x] Add the create request and Book response contracts
+- [x] Add `POST /api/books`
+- [x] Map validation results to the agreed Problem Details contract
+- [x] Return `201 Created`, `Location`, the complete Book, and ETag
+- [x] Document the endpoint, schemas, headers, and responses in OpenAPI
 
 #### Tests
 
-- [ ] Test creation with normalized valid data
-- [ ] Test every Book field validation boundary
-- [ ] Test blank and duplicate Author Names
-- [ ] Test deterministic Author Name ordering
-- [ ] Test that four initial field changes share one Change Set and timestamp
-- [ ] Test that every initial old value is null and every new value has its
+- [x] Test creation with normalized valid data
+- [x] Test every Book field validation boundary
+- [x] Test blank and duplicate Author Names
+- [x] Test deterministic Author Name ordering
+- [x] Test that four initial field changes share one Change Set and timestamp
+- [x] Test that every initial old value is null and every new value has its
   natural JSON shape
-- [ ] Test returned Book state and version
-- [ ] Test persistence and transaction intent through hand-written fakes
-- [ ] Test create-result HTTP mapping where it remains pure
+- [x] Test returned Book state and version
+- [x] Test persistence and transaction intent through hand-written fakes
+- [x] Test create-result HTTP mapping where it remains pure
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] Docker Compose starts PostgreSQL 18 with a persistent named volume
-- [ ] Starting the API in Development applies the initial migration
-- [ ] A valid request returns `201`, `Location`, ETag `"1"`, and the normalized
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] Docker Compose starts PostgreSQL 18 with a persistent named volume
+- [x] Starting the API in Development applies the initial migration
+- [x] A valid request returns `201`, `Location`, ETag `"1"`, and the normalized
   complete Book
-- [ ] The database contains one Book and exactly four corresponding initial Book
+- [x] The database contains one Book and exactly four corresponding initial Book
   Changes
-- [ ] The four changes share Book ID, Change Set ID, and Changed At
-- [ ] Stored Author Names use `text[]`; stored old and new values use `jsonb`
-- [ ] Invalid input returns the agreed validation Problem Details and writes
+- [x] The four changes share Book ID, Change Set ID, and Changed At
+- [x] Stored Author Names use `text[]`; stored old and new values use `jsonb`
+- [x] Invalid input returns the agreed validation Problem Details and writes
   nothing
-- [ ] Restarting PostgreSQL preserves created data
-- [ ] Production startup does not apply migrations automatically
+- [x] Restarting PostgreSQL preserves created data
+- [x] Production startup does not apply migrations automatically
 
 ### Pre-commit review
 
-- [ ] Compare implemented invariants with `docs/domain/BOOKS.md`
-- [ ] Confirm Domain contains no EF Core, HTTP, or serialization dependencies
-- [ ] Confirm the transaction cannot persist a Book without its initial changes
-- [ ] Inspect the generated migration for the two-table model and constraints
-- [ ] Confirm secrets and real connection strings are untracked
-- [ ] Update operational documentation with the verified Compose, migration, and
+- [x] Compare implemented invariants with `docs/domain/BOOKS.md`
+- [x] Confirm Domain contains no EF Core, HTTP, or serialization dependencies
+- [x] Confirm the transaction cannot persist a Book without its initial changes
+- [x] Inspect the generated migration for the two-table model and constraints
+- [x] Confirm secrets and real connection strings are untracked
+- [x] Update operational documentation with the verified Compose, migration, and
   run commands
-- [ ] Mark Slice 2 complete in [Progress](#progress)
+- [x] Mark Slice 2 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): create books with initial history`
 

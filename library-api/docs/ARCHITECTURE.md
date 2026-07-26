@@ -25,7 +25,10 @@ The API-to-Infrastructure reference exists for dependency-injection composition.
 
 ### Domain
 
-Domain owns `Book` behavior and invariants. `BookChange` represents an immutable historical fact, but history querying and pagination remain outside the Book aggregate.
+Domain owns `Book` current-state behavior and invariants. `BookChange`
+represents an immutable historical fact, but `Book` neither creates nor owns its
+history. History querying and pagination also remain outside the Book
+aggregate.
 
 Domain code contains no HTTP, database, request-model, or serialization concerns. Detailed rules are documented in [`domain/BOOKS.md`](domain/BOOKS.md).
 
@@ -39,20 +42,48 @@ Application organizes behavior vertically by use case:
 - Find Books
 - Get Book History
 
-Each feature keeps its input, handler, result model, and feature-specific validation together. History is a separate feature: clients load a Book and request its history independently.
+Each feature keeps its input, handler, and feature-specific validation together.
+Application DTOs describe reusable output shapes and are shared across use cases
+when those use cases return the same representation. History is a separate
+feature: clients load a Book and request its history independently.
 
 `Application/Abstractions` contains the small set of outbound contracts required by the use cases. These contracts express application needs and must not expose EF Core types or become generic CRUD repositories.
 
-Application handlers coordinate Domain behavior, persistence, transactions, and explicit success or error results.
+Application handlers coordinate Domain behavior, lifecycle-specific history
+policies, persistence, transactions, and explicit success or error results.
+The Create Book handler, rather than the Book entity, produces the initial
+four-field Change Set after the Book constructor completes successfully. It
+translates Book validation exceptions into explicit Application validation
+results.
+
+Book and Book Change persistence use separate focused repositories. Repositories
+only stage changes for their respective model; they do not decide which history
+a use case creates or commit independently. `IUnitOfWork` commits every staged
+change once at the use-case boundary.
+
+Each concrete repository owns private `ToPersistence` and `ToDomain` mappings so
+persistence representations never cross the Infrastructure boundary. Every
+persisted Domain entity has a corresponding Infrastructure record, even when
+their fields currently coincide. Persistence record types contain data only;
+conversion behavior belongs to the repository.
 
 ### Infrastructure
 
 Infrastructure implements Application abstractions using EF Core and PostgreSQL. It owns:
 
 - The EF Core database context and mappings.
+- Separate concrete repository implementations for Books and Book Changes.
+- Data-only `BookRecord` and `BookChangeRecord` persistence representations.
+- Conversion between Domain values and database representations, including
+  stable Changed Field strings and `jsonb` Change values.
 - Repository and query implementations.
 - Database migrations.
 - Transaction and optimistic-concurrency persistence behavior.
+
+Persistence is organized under `Configurations`, `Records`, `Repositories`, and
+`Migrations`. `LibraryDbContext` tracks only Infrastructure records. The concrete
+Unit of Work saves them in one transaction and then asks the Book repository to
+synchronize database-generated Book IDs back to the staged Domain objects.
 
 Technology choices and storage-specific decisions belong in the relevant ADRs rather than this document.
 
@@ -77,8 +108,14 @@ For creation and update:
 
 1. API translates the HTTP request into an Application command.
 2. Application loads or creates the Domain model and invokes its behavior.
-3. Application asks Infrastructure to persist the Book and its resulting history atomically.
-4. API translates the Application result into an HTTP response.
+3. Application produces any history required by that use case. For creation,
+   this is the complete initial Change Set; the Book entity is unaware of it.
+4. Application stages the Book and Book Changes through their separate
+   repositories.
+5. Application commits both through one Unit of Work. Infrastructure backs all
+   three abstractions with the same scoped database context so persistence is
+   atomic.
+6. API translates the Application result into an HTTP response.
 
 A stale update writes neither the Book nor its history.
 

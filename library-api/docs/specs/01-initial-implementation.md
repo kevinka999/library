@@ -195,10 +195,21 @@ the implementation plan; it does not redefine those documents.
   Book, Search Books, and Get Book History.
 - Keep focused persistence, history-reading, and unit-of-work contracts in
   `Application/Abstractions`; do not introduce a generic CRUD repository.
+- Stage Books and Book Changes through separate repositories. Commit all staged
+  changes once through the Unit of Work so the use case owns coordination and
+  the repositories contain no lifecycle-history policy.
+- Every concrete repository owns private `ToPersistence` and `ToDomain`
+  mappings. Every persisted Domain entity has a corresponding data-only
+  Infrastructure record, including when their fields currently coincide.
 - Inject concrete Application handlers into controllers without a mediator library.
 - Represent expected Application outcomes with a small explicit Result type.
-- Use explicit validation rather than FluentValidation. Domain objects continue
-  to guard their own invariants.
+- Reuse an Application `BookDto` across use cases that return the same complete
+  Book representation; do not create operation-specific DTOs with identical
+  fields.
+- Use Domain constructors and methods rather than FluentValidation. Domain
+  objects guard their own invariants and may report invalid construction through
+  a validation exception containing all detected field errors; Application
+  handlers translate that exception into an explicit failure result.
 
 ### Persistence
 
@@ -209,16 +220,27 @@ the implementation plan; it does not redefine those documents.
 - Store Author Names as `text[]` and Book Change old and new values as `jsonb`.
 - Use generated `bigint` identity values for Book and Book Change IDs, an
   incrementing `bigint` Book Version, and a UUID Change Set ID.
-- Store Changed Field as a stable string discriminator.
+- Infrastructure maps Domain Book Fields to stable string discriminators for
+  persistence.
 - Add foreign-key and uniqueness constraints, including at most one Book Change
   for each Changed Field in a Change Set.
 - Add indexes that support history lookup, filtering, and cursor ordering by Book
   ID, Changed At, Change Set ID, and Changed Field.
 - Generate and commit EF Core migrations.
 - Keep Book Changes append-only and permanently retained.
+- Keep EF record types, configurations, repositories, and migrations in focused
+  Infrastructure persistence folders.
+- After a successful Unit of Work commit, synchronize database-generated Book
+  IDs from tracked Book records back to their corresponding Domain objects.
 
 ### Domain and presentation boundaries
 
+- The public `Book` constructor owns validation and normalization of the initial
+  current state. Invalid construction throws one validation exception containing
+  all detected field errors.
+- `Book` does not create or own Book Changes.
+- The Create Book Application handler produces the initial four-field Change Set
+  and coordinates its atomic persistence with the Book.
 - `Book.Update` owns validation, normalized comparison, mutation, version
   behavior, and production of transient structured field changes.
 - Book History is not a navigation collection on the Book aggregate.
