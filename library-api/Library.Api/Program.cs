@@ -1,5 +1,7 @@
 using System.Text.Json;
+using Library.Api;
 using Library.Api.Errors;
+using Library.Api.OpenApi;
 using Library.Application;
 using Library.Infrastructure;
 
@@ -14,10 +16,20 @@ builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
     });
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.Create;
+});
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<UnexpectedExceptionHandler>();
-builder.Services.AddOpenApi(openApiDocumentName);
+builder.Services.AddOpenApi(
+    openApiDocumentName,
+    options =>
+    {
+        options.AddSchemaTransformer<CreateBookSchemaTransformer>();
+        options.AddOperationTransformer<CreateBookOpenApiTransformer>();
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -30,9 +42,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+await app.ApplyDevelopmentMigrationsAsync();
 
 app.UseExceptionHandler();
 app.UseCors();

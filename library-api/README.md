@@ -2,10 +2,9 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-The runnable Clean Architecture foundation is implemented. The Book API,
-PostgreSQL persistence, and Docker Compose setup are specified in
-[GitHub issue #1](https://github.com/kevinka999/library/issues/1) and are not yet
-implemented.
+The runnable Clean Architecture foundation and Book creation vertical slice are
+implemented. `POST /api/books` stores the normalized Book and its complete
+initial Change Set atomically in PostgreSQL.
 
 ## Documentation
 
@@ -17,7 +16,7 @@ implemented.
 ## Prerequisites
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- Docker with Docker Compose, once PostgreSQL support is implemented
+- Docker with Docker Compose
 
 Check the installed SDK:
 
@@ -36,7 +35,18 @@ dotnet build
 
 ## Run the API
 
-Start the HTTP development profile:
+First configure the database connection with .NET user secrets. Use the same
+password that you place in `.env`:
+
+```sh
+dotnet user-secrets init --project Library.Api
+dotnet user-secrets set --project Library.Api \
+  "ConnectionStrings:LibraryDatabase" \
+  "Host=localhost;Port=5432;Database=library;Username=library;Password=choose-a-local-password"
+```
+
+Alternatively, set `ConnectionStrings__LibraryDatabase` in the shell. Start the
+HTTP development profile:
 
 ```sh
 dotnet run --launch-profile http
@@ -64,20 +74,48 @@ OpenAPI and Swagger UI are available only in the Development environment.
 
 ## Database
 
-The target implementation uses PostgreSQL 18 through Npgsql. Docker Compose will run only external dependencies; the API continues to run locally with `dotnet run`.
-
-Once the Compose file is implemented, the expected lifecycle is:
+PostgreSQL 18 runs as the only Compose service; the API continues to run locally
+with `dotnet run`. Create the ignored local environment file and start the
+database:
 
 ```sh
+cp .env.example .env
+# Edit .env and choose a local-only password.
 docker compose up -d
+docker compose ps
 docker compose down
 ```
 
-Do not use these commands until a Compose file exists. Database connection settings must come from application configuration or environment variables; do not commit credentials.
+The named `library-postgres-data` volume preserves data across container
+restarts and `docker compose down`. Run `docker compose down --volumes` only
+when you intentionally want to delete the development database.
+
+Database credentials and real connection strings must remain in the ignored
+`.env`, user secrets, or environment variables. `.env.example` contains only a
+safe placeholder.
 
 ## Migrations
 
-EF Core migrations are not configured in the template yet. Once the Infrastructure project and EF tooling are present, document the exact project-specific commands here.
+The API automatically applies pending migrations at startup only when
+`ASPNETCORE_ENVIRONMENT=Development`. Generate a migration from the repository
+root with:
+
+```sh
+dotnet ef migrations add MigrationName \
+  --project Library.Infrastructure \
+  --startup-project Library.Api \
+  --output-dir Persistence/Migrations
+```
+
+Install the matching `dotnet-ef` 10.0.x tool first if it is unavailable. For a
+production deployment, apply migrations explicitly:
+
+```sh
+dotnet ef database update \
+  --project Library.Infrastructure \
+  --startup-project Library.Api \
+  --connection "$LIBRARY_DATABASE_CONNECTION_STRING"
+```
 
 The intended operational policy is:
 
@@ -92,10 +130,10 @@ Run all configured tests with:
 dotnet test
 ```
 
-The test suite uses xUnit and hand-written fakes. It currently covers the
-cross-cutting expected-error and unexpected-exception behavior; later slices
-will add Domain and Application handler coverage. The project intentionally
-does not require integration tests.
+The test suite uses xUnit and hand-written fakes. It covers cross-cutting error
+behavior and Book creation invariants in the Domain, while initial-history and
+persistence behavior are exercised through the Application handler. The project
+intentionally does not require automated integration tests.
 
 ## Target API
 
@@ -110,3 +148,19 @@ GET  /api/books/{id}/history?changedField=&changedFrom=&sortDirection=&cursor=&p
 ```
 
 Updates use the current Book ETag through the `If-Match` header. The history endpoint returns complete Change Sets and structured values so the frontend can generate its own descriptions.
+
+Create a Book:
+
+```sh
+curl --include http://localhost:5168/api/books \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "title": "The Left Hand of Darkness",
+    "shortDescription": "A science fiction novel.",
+    "publishDate": "1969-03-01",
+    "authors": ["Ursula K. Le Guin"]
+  }'
+```
+
+A successful response is `201 Created`, includes `Location: /api/books/{id}`
+and `ETag: "1"`, and returns the complete normalized Book.

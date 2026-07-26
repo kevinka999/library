@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="../Library.Api/Library.Api.csproj" />
     <ProjectReference Include="../Library.Application/Library.Application.csproj" />
+    <ProjectReference Include="../Library.Domain/Library.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

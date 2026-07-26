@@ -28,3 +28,6 @@ packages/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Local environment and secrets
+.env

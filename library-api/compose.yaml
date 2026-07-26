@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: library
+      POSTGRES_USER: library
+      POSTGRES_PASSWORD: ${LIBRARY_DB_PASSWORD:?Set LIBRARY_DB_PASSWORD in .env or the shell}
+    ports:
+      - "5432:5432"
+    volumes:
+      - library-postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U library -d library"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  library-postgres-data:
