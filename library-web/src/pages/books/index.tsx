@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { ApiError } from '../../api/client'
 import { useBooksQuery } from '../../api/books/hooks'
 import { Button } from '../../components/ui/button'
 import { buttonVariants } from '../../components/ui/button-styles'
 import { Input } from '../../components/ui/input'
 import { formatDate, formatNumber } from '../../i18n'
+import { useDebounce } from '../../hooks/use-debounce'
 import { cn } from '../../lib/utils'
 import { CreateBookDialog } from './create-book-dialog'
 import { parseBooksSearchParams, serializeBooksUrlState } from './search-params'
@@ -23,16 +24,39 @@ export function BooksPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [createOpen, setCreateOpen] = useState(false)
   const parsed = parseBooksSearchParams(searchParams)
+  const [searchText, setSearchText] = useState(parsed.value.search)
+  const debouncedSearch = useDebounce(searchText.trim(), 400)
+  const lastUrlSearch = useRef(parsed.value.search)
+  const syncingFromUrl = useRef(false)
   const booksQuery = useBooksQuery(parsed.value, parsed.valid)
+
+  useEffect(() => {
+    if (parsed.value.search !== lastUrlSearch.current) {
+      lastUrlSearch.current = parsed.value.search
+      syncingFromUrl.current = true
+      setSearchText(parsed.value.search)
+    }
+  }, [parsed.value.search])
+
+  useEffect(() => {
+    if (!parsed.valid) return
+    if (syncingFromUrl.current) {
+      if (debouncedSearch === parsed.value.search) syncingFromUrl.current = false
+      return
+    }
+    if (debouncedSearch !== parsed.value.search) {
+      setSearchParams(
+        serializeBooksUrlState({
+          ...parsed.value,
+          search: debouncedSearch,
+          page: 1,
+        }),
+      )
+    }
+  }, [debouncedSearch, parsed.valid, parsed.value, setSearchParams])
 
   function setUrl(next: typeof parsed.value) {
     setSearchParams(serializeBooksUrlState(next))
-  }
-
-  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    setUrl({ ...parsed.value, search: String(data.get('search') ?? '').trim(), page: 1 })
   }
 
   return (
@@ -51,22 +75,18 @@ export function BooksPage() {
 
       <div className="mt-8 rounded-2xl border border-border bg-surface shadow-card">
         <div className="flex flex-col gap-4 border-b border-border p-4 sm:flex-row sm:items-end sm:justify-between sm:p-6">
-          <form className="flex w-full max-w-2xl flex-col gap-2 sm:flex-row sm:items-end" onSubmit={submitSearch}>
-            <label className="grow text-sm font-semibold text-ink">
+          <div className="w-full max-w-2xl">
+            <label className="block text-sm font-semibold text-ink">
               {t('books.searchLabel')}
               <Input
-                key={parsed.value.search}
                 name="search"
-                defaultValue={parsed.value.search}
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
                 placeholder={t('books.searchPlaceholder')}
                 className="mt-1.5"
               />
             </label>
-            <Button type="submit" variant="secondary">
-              <Search size={18} aria-hidden="true" />
-              {t('books.search')}
-            </Button>
-          </form>
+          </div>
           <label className="text-sm font-semibold text-ink">
             {t('pagination.pageSize')}
             <select

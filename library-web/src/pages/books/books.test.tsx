@@ -64,10 +64,12 @@ describe('books page', () => {
     expect(within(rows[1]).getByRole('link', { name: 'View details' })).toHaveAttribute('href', '/books/9')
   })
 
-  it('resets the page for searches and preserves state for pagination', async () => {
+  it('debounces search changes, resets the page, and preserves state for pagination', async () => {
+    const searches: string[] = []
     server.use(
       http.get(apiUrl, ({ request }) => {
         const url = new URL(request.url)
+        searches.push(url.searchParams.get('search') ?? '')
         const page = Number(url.searchParams.get('page'))
         return HttpResponse.json({ ...firstPage, page })
       }),
@@ -78,12 +80,20 @@ describe('books page', () => {
     const search = screen.getByRole('textbox', { name: 'Search books' })
     await user.clear(search)
     await user.type(search, 'Ada')
-    await user.click(screen.getByRole('button', { name: 'Search' }))
-    expect(router.state.location.search).toBe('?search=Ada')
+    expect(router.state.location.search).toBe('?search=author&page=2&pageSize=20')
+    await waitFor(() => expect(router.state.location.search).toBe('?search=Ada'))
+    await waitFor(() => expect(searches).toEqual(['author', 'Ada']))
 
     await screen.findByText('Zebra Book')
     await user.click(screen.getByRole('button', { name: 'Next' }))
     expect(router.state.location.search).toBe('?search=Ada&page=2')
+
+    await router.navigate(-1)
+    await waitFor(() => expect(search).toHaveValue('Ada'))
+    await router.navigate(-1)
+    await waitFor(() => expect(search).toHaveValue('author'))
+    await new Promise((resolve) => window.setTimeout(resolve, 450))
+    expect(router.state.location.search).toBe('?search=author&page=2&pageSize=20')
   })
 
   it('shows invalid URL feedback without requesting books', async () => {

@@ -1,6 +1,6 @@
 # Frontend Architecture
 
-> Target architecture. The current application is still the Vite scaffold.
+> Architecture of the implemented frontend.
 
 ## Structure
 
@@ -18,6 +18,8 @@ src/
       get-book-history.ts # GET /api/books/:id/history and its query/output DTOs
   components/
     ui/                   # local shadcn/ui primitives
+  hooks/
+    use-debounce.ts       # reusable delayed-value hook for reactive inputs
   pages/
     books/
       index.tsx
@@ -52,6 +54,12 @@ not-found, and unexpected-error states. Use router APIs for links and navigation
 - Keep one-page components in that page's folder.
 - Extract a component only when it makes a complex page easier to understand or
   when it is reused.
+
+## Hooks
+
+Put reusable React behavior in `hooks/`. `useDebounce` delays propagation of a
+changing value; the Books search uses it to update URL-backed search state after
+typing pauses, while immediate input text remains local to the page.
 
 ## Performance
 
