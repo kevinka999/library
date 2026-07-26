@@ -41,64 +41,43 @@ dotnet build
 
 ## Run the API
 
-First configure the database connection with .NET user secrets. Use the same
-password that you place in `.env`:
+Docker runs PostgreSQL only; the API runs with `dotnet run`.
 
-```sh
-dotnet user-secrets init --project Library.Api
-dotnet user-secrets set --project Library.Api \
-  "ConnectionStrings:LibraryDatabase" \
-  "Host=localhost;Port=5432;Database=library;Username=library;Password=choose-a-local-password"
-```
-
-Alternatively, set `ConnectionStrings__LibraryDatabase` in the shell. Start the
-HTTP development profile:
-
-```sh
-dotnet run --launch-profile http
-```
-
-The current launch profile listens at:
-
-- `http://localhost:5168`
-- OpenAPI document: `http://localhost:5168/openapi/v1.json`
-- Swagger UI: `http://localhost:5168/swagger`
-
-HTTPS is also available through:
-
-```sh
-dotnet run --launch-profile https
-```
-
-The HTTPS profile listens at `https://localhost:7119` and may require trusting the local development certificate:
-
-```sh
-dotnet dev-certs https --trust
-```
-
-OpenAPI and Swagger UI are available only in the Development environment.
-
-## Database
-
-PostgreSQL 18 runs as the only Compose service; the API continues to run locally
-with `dotnet run`. Create the ignored local environment file and start the
-database:
+Create `.env`, choose a local password, and use that same password in the API
+connection string:
 
 ```sh
 cp .env.example .env
-# Edit .env and choose a local-only password.
-docker compose up -d
-docker compose ps
-docker compose down
+# Set LIBRARY_DB_PASSWORD=pw123 in .env.
+
+dotnet user-secrets init --project Library.Api
+dotnet user-secrets set --project Library.Api \
+  "ConnectionStrings:LibraryDatabase" \
+  "Host=localhost;Port=5432;Database=library;Username=library;Password=pw123"
+
+docker compose up -d --wait
+dotnet run --project Library.Api --launch-profile http
 ```
 
-The named `library-postgres-data` volume preserves data across container
-restarts and `docker compose down`. Run `docker compose down --volumes` only
-when you intentionally want to delete the development database.
+Swagger is available at `http://localhost:5168/swagger` and OpenAPI at
+`http://localhost:5168/openapi/v1.json`. Development migrations are applied
+automatically.
 
-Database credentials and real connection strings must remain in the ignored
-`.env`, user secrets, or environment variables. `.env.example` contains only a
-safe placeholder.
+If the database already exists and you need to change its password, update both
+PostgreSQL and the API secret, then put the new value in
+`LIBRARY_DB_PASSWORD` inside `.env`:
+
+```sh
+docker compose exec postgres \
+  psql -U library -d library \
+  -c "ALTER USER library WITH PASSWORD 'new-password';"
+dotnet user-secrets set --project Library.Api \
+  "ConnectionStrings:LibraryDatabase" \
+  "Host=localhost;Port=5432;Database=library;Username=library;Password=new-password"
+```
+
+Use `docker compose down` to stop PostgreSQL. Add `--volumes` only when you also
+want to delete all local database data.
 
 ## Migrations
 
