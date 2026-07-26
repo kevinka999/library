@@ -1,6 +1,7 @@
 using Library.Application.Abstractions;
 using Library.Application.Common;
 using Library.Domain.Books;
+using Library.Domain.Exceptions;
 
 namespace Library.Application.Handlers.CreateBook;
 

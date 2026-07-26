@@ -2,10 +2,12 @@
 
 A .NET 10 controller-based web API for managing books and exposing their immutable change history.
 
-The runnable Clean Architecture foundation and Book creation and retrieval
-vertical slices are implemented. `POST /api/books` stores the normalized Book
-and its complete initial Change Set atomically in PostgreSQL.
+The runnable Clean Architecture foundation and Book creation, retrieval, and
+replacement vertical slices are implemented. `POST /api/books` stores the
+normalized Book and its complete initial Change Set atomically in PostgreSQL.
 `GET /api/books/{id}` returns its current state and version-backed ETag.
+`PUT /api/books/{id}` safely replaces it using `If-Match`, appending one
+complete Change Set only when the normalized state changes.
 
 ## Documentation
 
@@ -132,9 +134,10 @@ dotnet test
 ```
 
 The test suite uses xUnit and hand-written fakes. It covers cross-cutting error
-behavior and Book creation invariants in the Domain, while initial-history and
-persistence behavior are exercised through the Application handler. The project
-intentionally does not require automated integration tests.
+behavior and Book creation and replacement invariants in the Domain, while
+initial-history, update-history, no-op, and optimistic-concurrency behavior are
+exercised through the Application handlers. The project intentionally does not
+require automated integration tests.
 
 ## Target API
 
@@ -174,3 +177,22 @@ curl --include http://localhost:5168/api/books/1
 
 An existing Book returns `200 OK`, its complete current representation, and its
 current ETag. An unknown ID returns `404 application/problem+json`.
+
+Replace every editable field using the current ETag:
+
+```sh
+curl --include --request PUT http://localhost:5168/api/books/1 \
+  --header 'Content-Type: application/json' \
+  --header 'If-Match: "1"' \
+  --data '{
+    "title": "The Dispossessed",
+    "shortDescription": "An ambiguous utopia.",
+    "publishDate": "1974-05-01",
+    "authors": ["Ursula K. Le Guin"]
+  }'
+```
+
+An effective replacement returns `200 OK` with an advanced ETag and appends one
+Book Change per changed field in a single Change Set. A normalized no-op keeps
+the current version and creates no history. Missing, malformed, and stale
+preconditions return `428`, `400`, and `412` respectively.

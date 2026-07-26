@@ -102,10 +102,16 @@ public sealed class CreateBookHandlerTests
     {
         public Book? Book { get; private set; }
 
+        public Task<Book?> GetByIdAsync(long id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public void Add(Book book)
         {
             Book = book;
         }
+
+        public void Update(Book book, long expectedVersion) =>
+            throw new NotSupportedException();
     }
 
     private sealed class RecordingBookChangeRepository : IBookChangeRepository

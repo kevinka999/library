@@ -1,6 +1,7 @@
 using Library.Application.Abstractions;
 using Library.Domain.Books;
 using Library.Infrastructure.Persistence.Records;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Persistence.Repositories;
 
@@ -12,11 +13,33 @@ internal sealed class BookRepository(LibraryDbContext database) : IBookRepositor
     private readonly Dictionary<BookRecord, Book> _domainByRecord =
         new(ReferenceEqualityComparer.Instance);
 
+    public async Task<Book?> GetByIdAsync(long id, CancellationToken cancellationToken)
+    {
+        var record = await database.Books
+            .SingleOrDefaultAsync(book => book.Id == id, cancellationToken);
+
+        return record is null ? null : GetDomain(record);
+    }
+
     public void Add(Book book)
     {
         var record = ToPersistence(book);
         Track(book, record);
         database.Books.Add(record);
+    }
+
+    public void Update(Book book, long expectedVersion)
+    {
+        var record = GetPersistenceRecord(book);
+        var entry = database.Entry(record);
+
+        entry.Property(persisted => persisted.Title).CurrentValue = book.Title;
+        entry.Property(persisted => persisted.ShortDescription).CurrentValue =
+            book.ShortDescription;
+        entry.Property(persisted => persisted.PublishDate).CurrentValue = book.PublishDate;
+        entry.Property(persisted => persisted.Authors).CurrentValue = book.Authors.ToArray();
+        entry.Property(persisted => persisted.Version).OriginalValue = expectedVersion;
+        entry.Property(persisted => persisted.Version).CurrentValue = book.Version;
     }
 
     internal BookRecord GetPersistenceRecord(Book book) =>

@@ -1,3 +1,5 @@
+using Library.Domain.Exceptions;
+
 namespace Library.Domain.Books;
 
 public sealed class Book
@@ -72,6 +74,80 @@ public sealed class Book
     internal void AssignId(long id)
     {
         Id = id;
+    }
+
+    public IReadOnlyList<BookFieldChange> Update(
+        string? title,
+        string? shortDescription,
+        DateOnly? publishDate,
+        IEnumerable<string?>? authors)
+    {
+        var errors = new Dictionary<string, List<string>>();
+        var normalizedTitle = NormalizeRequiredText(title, "title", "Title", MaxTitleLength, errors);
+        var normalizedDescription = NormalizeRequiredText(
+            shortDescription,
+            "shortDescription",
+            "Short description",
+            MaxShortDescriptionLength,
+            errors);
+
+        if (publishDate is null)
+        {
+            AddError(errors, "publishDate", "Publish date is required.");
+        }
+
+        var normalizedAuthors = NormalizeAuthors(authors, errors);
+
+        if (errors.Count > 0)
+        {
+            throw new BookValidationException(errors.ToDictionary(
+                entry => entry.Key,
+                entry => entry.Value.ToArray()));
+        }
+
+        var changes = new List<BookFieldChange>(4);
+
+        if (!string.Equals(Title, normalizedTitle, StringComparison.Ordinal))
+        {
+            changes.Add(new BookFieldChange(BookField.Title, Title, normalizedTitle!));
+        }
+
+        if (!string.Equals(ShortDescription, normalizedDescription, StringComparison.Ordinal))
+        {
+            changes.Add(new BookFieldChange(
+                BookField.ShortDescription,
+                ShortDescription,
+                normalizedDescription!));
+        }
+
+        if (PublishDate != publishDate)
+        {
+            changes.Add(new BookFieldChange(
+                BookField.PublishDate,
+                PublishDate,
+                publishDate!.Value));
+        }
+
+        if (!_authors.SequenceEqual(normalizedAuthors!, StringComparer.Ordinal))
+        {
+            changes.Add(new BookFieldChange(
+                BookField.Authors,
+                _authors.ToArray(),
+                normalizedAuthors!.ToArray()));
+        }
+
+        if (changes.Count == 0)
+        {
+            return changes;
+        }
+
+        Title = normalizedTitle!;
+        ShortDescription = normalizedDescription!;
+        PublishDate = publishDate!.Value;
+        _authors = normalizedAuthors!;
+        Version++;
+
+        return changes;
     }
 
     private static string? NormalizeRequiredText(
@@ -170,3 +246,8 @@ public sealed class Book
         messages.Add(message);
     }
 }
+
+public sealed record BookFieldChange(
+    BookField ChangedField,
+    object OldValue,
+    object NewValue);

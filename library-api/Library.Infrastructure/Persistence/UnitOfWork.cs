@@ -1,5 +1,7 @@
 using Library.Application.Abstractions;
+using Library.Application.Exceptions;
 using Library.Infrastructure.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrastructure.Persistence;
 
@@ -10,7 +12,15 @@ internal sealed class UnitOfWork(
 {
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
-        await database.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await database.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException exception)
+        {
+            throw new ConcurrencyConflictException(exception);
+        }
+
         bookRepository.SynchronizeGeneratedIds();
     }
 }

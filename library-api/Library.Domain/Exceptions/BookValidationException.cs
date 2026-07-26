@@ -1,4 +1,4 @@
-namespace Library.Domain.Books;
+namespace Library.Domain.Exceptions;
 
 public sealed class BookValidationException(
     IReadOnlyDictionary<string, string[]> errors)

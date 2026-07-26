@@ -24,7 +24,7 @@ checks are marked complete.
 - [x] Slice 1 — Runnable API foundation
 - [x] Slice 2 — Create a Book
 - [x] Slice 3 — Retrieve a Book
-- [ ] Slice 4 — Replace a Book safely
+- [x] Slice 4 — Replace a Book safely
 - [ ] Slice 5 — Search and page Books
 - [ ] Slice 6 — Browse Book History
 - [ ] Slice 7 — Delivery verification
@@ -453,79 +453,79 @@ are no-ops; stale or missing preconditions never mutate state.
 
 #### Domain behavior
 
-- [ ] Implement complete replacement through `Book.Update`
-- [ ] Validate the entire replacement before mutating any current state
-- [ ] Detect effective field changes after normalization
-- [ ] Treat Author Names as an unordered set
-- [ ] Treat display-casing corrections as effective changes
-- [ ] Ignore author-order-only changes
-- [ ] Return transient field changes with natural old and new value shapes
-- [ ] Increment Version once only when at least one effective change exists
-- [ ] Produce no Change Set for a no-op
+- [x] Implement complete replacement through `Book.Update`
+- [x] Validate the entire replacement before mutating any current state
+- [x] Detect effective field changes after normalization
+- [x] Treat Author Names as an unordered set
+- [x] Treat display-casing corrections as effective changes
+- [x] Ignore author-order-only changes
+- [x] Return transient field changes with natural old and new value shapes
+- [x] Increment Version once only when at least one effective change exists
+- [x] Produce no Change Set for a no-op
 
 #### Application and persistence
 
-- [ ] Add the Update Book command, input, result, validator, and handler
-- [ ] Represent missing, stale, invalid, no-op, and updated outcomes explicitly
-- [ ] Check the supplied version before no-op detection
-- [ ] Give every effective field change one Change Set ID and timestamp
-- [ ] Save current state and Book Changes atomically
-- [ ] Configure Version as the agreed concurrency token
-- [ ] Translate an actual database concurrency race into the stale result
+- [x] Add the Update Book command, input, result, validator, and handler
+- [x] Represent missing, stale, invalid, no-op, and updated outcomes explicitly
+- [x] Check the supplied version before no-op detection
+- [x] Give every effective field change one Change Set ID and timestamp
+- [x] Save current state and Book Changes atomically
+- [x] Configure Version as the agreed concurrency token
+- [x] Translate an actual database concurrency race into the stale result
 
 #### HTTP endpoint
 
-- [ ] Add the complete-replacement request contract
-- [ ] Add `PUT /api/books/{id}`
-- [ ] Parse and validate `If-Match` according to D-001
-- [ ] Return `428` for an absent header
-- [ ] Return `400` for a malformed or unsupported header
-- [ ] Return `412` for a valid stale header
-- [ ] Return `200`, the current Book, and unchanged ETag for a no-op
-- [ ] Return `200`, the updated Book, and advanced ETag for an effective update
-- [ ] Document every header, body, and outcome in OpenAPI
+- [x] Add the complete-replacement request contract
+- [x] Add `PUT /api/books/{id}`
+- [x] Parse and validate `If-Match` according to D-001
+- [x] Return `428` for an absent header
+- [x] Return `400` for a malformed or unsupported header
+- [x] Return `412` for a valid stale header
+- [x] Return `200`, the current Book, and unchanged ETag for a no-op
+- [x] Return `200`, the updated Book, and advanced ETag for an effective update
+- [x] Document every header, body, and outcome in OpenAPI
 
 #### Tests
 
-- [ ] Test each field changing independently
-- [ ] Test multiple fields changing in one Change Set
-- [ ] Test author trimming, case-insensitive duplicate rejection, deterministic
+- [x] Test each field changing independently
+- [x] Test multiple fields changing in one Change Set
+- [x] Test author trimming, case-insensitive duplicate rejection, deterministic
   ordering, order independence, and casing correction
-- [ ] Test full validation before mutation
-- [ ] Test current-version no-op behavior
-- [ ] Test stale-version behavior even when the submitted body is otherwise a
+- [x] Test full validation before mutation
+- [x] Test current-version no-op behavior
+- [x] Test stale-version behavior even when the submitted body is otherwise a
   no-op
-- [ ] Test missing Book behavior
-- [ ] Test that invalid, missing, and stale outcomes cause no persistence or
+- [x] Test missing Book behavior
+- [x] Test that invalid, missing, and stale outcomes cause no persistence or
   history mutation
-- [ ] Test one Version increment per effective update
-- [ ] Test transaction intent through hand-written fakes
-- [ ] Test ETag parsing and HTTP result mapping
+- [x] Test one Version increment per effective update
+- [x] Test transaction intent through hand-written fakes
+- [x] Test ETag parsing and HTTP result mapping
 
 ### Acceptance criteria
 
-- [ ] `dotnet build` succeeds
-- [ ] `dotnet test` succeeds
-- [ ] An effective update with the current ETag returns `200`, ETag `"2"`, and
+- [x] `dotnet build` succeeds
+- [x] `dotnet test` succeeds
+- [x] An effective update with the current ETag returns `200`, ETag `"2"`, and
   the complete updated Book
-- [ ] The database contains one new immutable Book Change per changed field
-- [ ] Every change from the request shares one Change Set ID and timestamp
-- [ ] The Book update and its changes are committed atomically
-- [ ] A current-version no-op preserves Version and creates no history
-- [ ] A stale update returns `412` and leaves current state and history unchanged
-- [ ] A missing `If-Match` returns `428`
-- [ ] Unsupported or malformed `If-Match` syntax returns `400`
-- [ ] Two competing updates using the same ETag cannot both succeed
-- [ ] Existing Book Changes cannot be updated or deleted through the application
+- [x] The database contains one new immutable Book Change per changed field
+- [x] Every change from the request shares one Change Set ID and timestamp
+- [x] The Book update and its changes are committed atomically
+- [x] A current-version no-op preserves Version and creates no history
+- [x] A stale update returns `412` and leaves current state and history unchanged
+- [x] A missing `If-Match` returns `428`
+- [x] Unsupported or malformed `If-Match` syntax returns `400`
+- [x] Two competing updates using the same ETag cannot both succeed
+- [x] Existing Book Changes cannot be updated or deleted through the application
 
 ### Pre-commit review
 
-- [ ] Confirm the precondition check precedes no-op detection
-- [ ] Confirm Domain owns comparison and invariants
-- [ ] Confirm database concurrency, not only an in-memory check, closes the race
-- [ ] Inspect one-field and multi-field rows directly in PostgreSQL
-- [ ] Confirm controller branches match the agreed status-code contract
-- [ ] Mark Slice 4 complete in [Progress](#progress)
+- [x] Confirm the precondition check precedes no-op detection
+- [x] Confirm Domain owns comparison and invariants
+- [x] Confirm database concurrency, not only an in-memory check, closes the race
+- [x] Inspect one-field and multi-field rows directly in PostgreSQL
+- [x] Confirm controller branches match the agreed status-code contract
+- [x] Mark Slice 4 complete in [Progress](#progress)
 
 **Suggested commit:** `feat(api): replace books with optimistic concurrency`
 
