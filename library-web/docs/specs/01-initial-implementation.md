@@ -11,10 +11,8 @@ shapes and [`../../CONTEXT.md`](../../CONTEXT.md) defines product language.
 | Route | Responsibility |
 | --- | --- |
 | `/` | Redirect to `/books` |
-| `/books` | Search and numbered Book pages |
-| `/books/new` | Create a Book |
-| `/books/:bookId` | Current Book details and history |
-| `/books/:bookId/edit` | Replace the current Book safely |
+| `/books` | Search and numbered Book pages, with Book creation in a modal |
+| `/books/:bookId` | Current Book details, inline editing, and history |
 
 Unknown routes show a useful not-found screen. Invalid Book IDs never trigger an
 API request.
@@ -32,19 +30,21 @@ API request.
 
 ### Create and view
 
-- **WEB-004:** The create form requires Title, Short Description, Publish Date,
-  and at least one Author Name. It submits the complete API input.
+- **WEB-004:** A button on `/books` opens the create form in a modal. The form
+  requires Title, Short Description, Publish Date, and at least one Author Name,
+  and submits the complete API input.
 - **WEB-005:** Client validation improves feedback but does not replace server
   validation. API field errors appear beside matching controls.
 - **WEB-006:** A successful create caches the returned Book and ETag, then
   navigates to `/books/{id}`.
 - **WEB-007:** The detail route shows the complete current representation and
-  provides explicit edit and history actions.
+  allows editing in the same page with a Formik form and Yup validation. Book
+  History appears below the current Book information.
 
 ### Replace safely
 
-- **WEB-008:** The edit form starts from one Book response and retains that
-  response's exact ETag.
+- **WEB-008:** The inline edit form starts from one Book response and retains
+  that response's exact ETag.
 - **WEB-009:** Update sends every editable field with `If-Match`; a successful
   response replaces cached Book data and ETag.
 - **WEB-010:** On `412`, the draft is preserved and the UI explains that a newer
@@ -59,11 +59,26 @@ API request.
   infinite query with the opaque `nextCursor` as `after`.
 - **WEB-013:** Filters for Changed Field, inclusive start, exclusive end, and
   chronological direction live in the URL. Changing a filter starts a new cursor chain.
-- **WEB-014:** Each history item renders one complete Change Set. Field filters
-  never hide the other Book Changes returned in that Change Set.
+- **WEB-014:** Each history item renders one complete Change Set as one item in
+  a vertical timeline. Its marker aligns with the item title and a line connects
+  it to the next item. Field filters never hide the other Book Changes returned
+  in that Change Set.
 - **WEB-015:** The frontend converts structured old/new values into localized,
   human-readable descriptions and handles null, strings, date strings, and
   Author Name arrays.
+- **WEB-016:** History has no numbered pages. When `hasMore` is true, a localized
+  Load More button at the end requests the next opaque cursor page and appends
+  complete Change Sets without replacing earlier items.
+
+### Localization
+
+- **WEB-017:** All application-owned interface copy is available in English and
+  German, including navigation, controls, form feedback, empty/loading/error
+  states, pagination, and history descriptions. Book field values and history
+  values are never translated.
+- **WEB-018:** A language select is always available and presents `🇩🇪 Deutsch`
+  and `🇬🇧 English`. Each option also has an accessible language name; changing
+  language updates the document language and locale-sensitive formatting.
 
 ## Out of scope
 
@@ -72,8 +87,9 @@ sorting, offline mutation, and realtime updates are not part of this delivery.
 
 ## Delivery slices
 
-1. Root providers, routes, theme tokens, shadcn/ui foundation, and HTTP client.
-2. Typed Book API, query keys, search page, and detail page.
-3. Shared Book form, create flow, and concurrency-safe edit flow.
-4. Cursor-paged history, filters, and localized change descriptions.
-5. Accessibility pass, behavior tests, error recovery, and responsive verification.
+1. Root providers, two-route shell, theme tokens, shadcn/ui foundation, HTTP
+   client, test harness, and English/German localization.
+2. Typed Book API, query keys, searchable numbered table, and create modal.
+3. Detail page and concurrency-safe inline Formik/Yup edit flow.
+4. Cursor-paged timeline, filters, localized change descriptions, accessibility
+   pass, behavior tests, error recovery, and responsive verification.

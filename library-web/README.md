@@ -10,6 +10,8 @@ product and architecture are documented before feature implementation begins.
 - [`CONTEXT.md`](CONTEXT.md) defines product purpose and domain language.
 - [`docs/specs/01-initial-implementation.md`](docs/specs/01-initial-implementation.md)
   defines the first delivery.
+- [`docs/plans/01-initial-implementation-plan.md`](docs/plans/01-initial-implementation-plan.md)
+  breaks the first delivery into reviewable implementation slices.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) defines module boundaries and data flow.
 
 Read only the documents relevant to the current change.

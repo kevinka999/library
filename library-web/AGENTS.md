@@ -9,6 +9,8 @@ Read this file first, then only the document needed by the task:
 - Product purpose or domain language: [`CONTEXT.md`](CONTEXT.md)
 - Feature behavior and acceptance criteria:
   [`docs/specs/01-initial-implementation.md`](docs/specs/01-initial-implementation.md)
+- Initial feature implementation sequence:
+  [`docs/plans/01-initial-implementation-plan.md`](docs/plans/01-initial-implementation-plan.md)
 - Boundaries, folders, routing, or state:
   [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
