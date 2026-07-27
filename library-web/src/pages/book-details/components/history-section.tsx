@@ -147,7 +147,7 @@ export function HistorySection({ bookId }: { bookId: number }) {
       changedFrom: localDateTimeToInstant(data.get('historyFrom')),
       changedBefore: localDateTimeToInstant(data.get('historyBefore')),
       sortDirection: data.get('historySort') === 'ascending' ? 'ascending' as const : 'descending' as const,
-      limit: 20,
+      limit: 5,
     }
     setSearchParams(writeHistorySearchParams(searchParams, next))
   }
@@ -156,7 +156,7 @@ export function HistorySection({ bookId }: { bookId: number }) {
     setSearchParams(writeHistorySearchParams(searchParams, {
       changedFields: [],
       sortDirection: 'descending',
-      limit: 20,
+      limit: 5,
     }))
   }
 

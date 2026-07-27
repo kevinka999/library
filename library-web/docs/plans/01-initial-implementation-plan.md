@@ -268,7 +268,7 @@ navigates to its detail route.
 #### URL-backed search and pagination
 
 - [ ] Parse `search`, `page`, and `pageSize` from URL search params with explicit
-  defaults of page 1 and page size 20
+  defaults of page 1 and page size 10, accepting page sizes 5 and 10
 - [ ] Reject or visibly recover from non-integer, out-of-range, duplicate, or
   otherwise invalid paging params without issuing a misleading request
 - [ ] Build a labeled search form that submits the current text to the URL
@@ -548,8 +548,8 @@ plus final cross-feature verification
 - [ ] Convert local date/time controls to valid UTC instants for the API and show
   clear localized validation for invalid or inverted ranges
 - [ ] Start a new infinite-query chain when any filter changes
-- [ ] Keep the page limit fixed unless a user-facing limit control is explicitly
-  added; never expose the cursor in a control
+- [ ] Keep the page limit fixed at 5 unless a user-facing limit control is
+  explicitly added; never expose the cursor in a control
 
 #### Grouped vertical timeline
 

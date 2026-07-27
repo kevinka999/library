@@ -23,7 +23,8 @@ API request.
 
 - **WEB-001:** `/books` shows API-ordered results with title, author names,
   Publish Date, and a link to the stable detail route.
-- **WEB-002:** `search`, `page`, and `pageSize` live in URL search params.
+- **WEB-002:** `search`, `page`, and `pageSize` live in URL search params. The
+  Books table accepts page sizes 5 and 10.
   Changing search or page size resets `page` to 1.
 - **WEB-003:** Loading, no-results, invalid-query, and unexpected-error states are
   distinct. Pagination uses the API totals and stays keyboard accessible.
@@ -56,7 +57,8 @@ API request.
 ### History
 
 - **WEB-012:** History is loaded separately from current Book state and uses an
-  infinite query with the opaque `nextCursor` as `after`.
+  infinite query with the opaque `nextCursor` as `after`, loading five Change
+  Sets at a time.
 - **WEB-013:** Filters for Changed Field, inclusive start, exclusive end, and
   chronological direction live in the URL. Changing a filter starts a new cursor chain.
 - **WEB-014:** Each history item renders one complete Change Set as one item in

@@ -94,7 +94,7 @@ export function BooksPage() {
               value={parsed.value.pageSize}
               onChange={(event) => setUrl({ ...parsed.value, page: 1, pageSize: Number(event.target.value) })}
             >
-              {[10, 20, 50, 100].map((size) => <option key={size} value={size}>{size}</option>)}
+              {[5, 10].map((size) => <option key={size} value={size}>{size}</option>)}
             </select>
           </label>
         </div>
@@ -103,7 +103,7 @@ export function BooksPage() {
           <div className="p-6" role="alert">
             <h2 className="font-serif text-2xl font-semibold">{t('errors.invalidQueryTitle')}</h2>
             <p className="mt-2 text-muted">{t('errors.invalidQuery')}</p>
-            <Button className="mt-4" variant="secondary" onClick={() => setUrl({ search: '', page: 1, pageSize: 20 })}>
+            <Button className="mt-4" variant="secondary" onClick={() => setUrl({ search: '', page: 1, pageSize: 10 })}>
               {t('books.resetFilters')}
             </Button>
           </div>

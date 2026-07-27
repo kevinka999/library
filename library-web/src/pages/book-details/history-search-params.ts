@@ -32,7 +32,7 @@ export function parseHistorySearchParams(params: URLSearchParams): ParsedHistory
   const fallback: BookHistoryFilters = {
     changedFields: fields.filter((field) => knownChangedFields.includes(field)),
     sortDirection: 'descending',
-    limit: 20,
+    limit: 5,
   }
   const fieldsValid = fields.every((field) => knownChangedFields.includes(field))
   const directionValid = directions.length <= 1 && (direction === 'ascending' || direction === 'descending')
@@ -51,7 +51,7 @@ export function parseHistorySearchParams(params: URLSearchParams): ParsedHistory
       changedFrom: from,
       changedBefore: before,
       sortDirection: direction,
-      limit: 20,
+      limit: 5,
     },
   }
 }
