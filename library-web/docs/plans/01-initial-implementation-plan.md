@@ -23,10 +23,10 @@ and do not change `library-api`.
 ## Progress
 
 - [x] Scope decisions confirmed
-- [ ] Slice 1 — Localized application foundation
-- [ ] Slice 2 — Search, page, and create Books
-- [ ] Slice 3 — View and safely edit a Book
-- [ ] Slice 4 — Browse Book History and verify the delivery
+- [x] Slice 1 — Localized application foundation
+- [x] Slice 2 — Search, page, and create Books
+- [x] Slice 3 — View and safely edit a Book
+- [x] Slice 4 — Browse Book History and verify the delivery
 
 ## Dependency order
 
@@ -59,7 +59,7 @@ than the original frontend specification.
 - [x] Keep only `/books` and `/books/:bookId` as user-facing feature routes
 - [x] Open Book creation from a button on `/books` in a modal; do not add
   `/books/new`
-- [x] Edit the current Book inline on `/books/:bookId`; do not add
+- [x] Edit the current Book in a modal on `/books/:bookId`; do not add
   `/books/:bookId/edit`
 - [x] Render Book History below the current Book information on the same detail
   page
@@ -81,7 +81,7 @@ than the original frontend specification.
 - [x] Treat [`../openapi/v1.json`](../openapi/v1.json) as the HTTP contract
 - [x] Keep server state in TanStack Query and shareable search, pagination, and
   history-filter state in the URL
-- [x] Keep modal visibility, edit mode, and unsaved form drafts local
+- [x] Keep modal visibility, edit mode, and form values local
 - [x] Preserve ETags as opaque strings; only the API layer reads response ETag
   headers or writes `If-Match`
 - [x] Use Formik and Yup for both create and edit forms
@@ -268,7 +268,7 @@ navigates to its detail route.
 #### URL-backed search and pagination
 
 - [ ] Parse `search`, `page`, and `pageSize` from URL search params with explicit
-  defaults of page 1 and page size 20
+  defaults of page 1 and page size 10, accepting page sizes 5 and 10
 - [ ] Reject or visibly recover from non-integer, out-of-range, duplicate, or
   otherwise invalid paging params without issuing a misleading request
 - [ ] Build a labeled search form that submits the current text to the URL
@@ -375,8 +375,8 @@ navigates to its detail route.
 
 ### Verifiable outcome
 
-`/books/:bookId` displays the complete current Book and lets the user enter an
-inline Formik/Yup edit mode. Updates replace every editable field with the exact
+`/books/:bookId` displays the complete current Book and opens a Formik/Yup edit
+modal. Updates replace every editable field with the exact
 ETag from the loaded representation, and stale edits remain intact until the
 user explicitly chooses how to recover.
 
@@ -413,10 +413,10 @@ user explicitly chooses how to recover.
 - [ ] Format dates for the active locale without mutating or translating Book
   values
 
-#### Inline edit flow
+#### Modal edit flow
 
-- [ ] Add an explicit localized Edit action that switches the details section
-  into inline edit mode without navigating
+- [ ] Add an explicit localized Edit action that opens a modal without
+  navigating
 - [ ] Initialize one Formik form from one successful Book response
 - [ ] Use the same Yup rules and Author Name interaction as the create form
   without forcing an abstraction that obscures Formik state or ETag ownership
@@ -428,15 +428,14 @@ user explicitly chooses how to recover.
 - [ ] On success, replace the detail cache with the returned Book and ETag,
   invalidate affected Book list queries, leave edit mode, and keep the user on
   the detail route
-- [ ] Allow canceling edit mode with an explicit warning or confirmation when
-  doing so would discard a dirty draft
+- [ ] Allow canceling edit mode without navigating
 
 #### Concurrency and integration failures
 
 - [ ] On `412 Precondition Failed`, keep every draft value and explain that a
   newer representation exists
-- [ ] Provide an explicit Reload Current Book action that discards the stale
-  baseline only after the user's confirmation when the draft is dirty
+- [ ] Provide an explicit Reload Current Book action that replaces the stale
+  baseline
 - [ ] Never automatically retry a stale update with a newer ETag
 - [ ] Treat `428 Precondition Required` as an integration failure, not a field
   validation error
@@ -448,7 +447,7 @@ user explicitly chooses how to recover.
 #### Tests
 
 - [ ] Test loading, current details, invalid ID, not-found, and unexpected error
-- [ ] Test entering and canceling inline edit mode
+- [ ] Test opening and canceling the edit modal
 - [ ] Test that the Formik form starts from exactly one Book/ETag pair
 - [ ] Test complete replacement input and unchanged opaque `If-Match`
 - [ ] Test client validation and mapped/unmatched server validation errors
@@ -472,14 +471,14 @@ user explicitly chooses how to recover.
 - [ ] `404`, `428`, missing ETag, validation, and unexpected failures remain
   distinguishable
 - [ ] Language switching translates controls and feedback but never Book values
-- [ ] The current-information and inline-form layouts work by keyboard and at
+- [ ] The current-information and modal-form layouts work by keyboard and at
   mobile and desktop widths
 
 ### Manual verification
 
 - [ ] Open a Book directly by URL and through the Books table
 - [ ] Edit every field, including adding and removing Author Names
-- [ ] Cancel a dirty edit and confirm that discarding is explicit
+- [ ] Cancel an edit and confirm that the modal closes
 - [ ] Complete a valid edit and confirm the updated table state after navigating
   back
 - [ ] Produce a stale ETag with two browser tabs and confirm `412` preserves the
@@ -491,8 +490,8 @@ user explicitly chooses how to recover.
 - [ ] Confirm only the API layer reads or sends ETag headers
 - [ ] Confirm no stale mutation can retry with a refreshed ETag
 - [ ] Confirm the detail query does not fetch Book History
-- [ ] Confirm no route-only components were moved into shared folders without
-  actual reuse
+- [ ] Confirm each page implements its route component directly in `index.tsx`
+  and keeps auxiliary route-only components in `pages/<page>/components`
 - [ ] Confirm every new interface string exists in both languages
 - [ ] Mark Slice 3 complete in [Progress](#progress)
 
@@ -549,8 +548,8 @@ plus final cross-feature verification
 - [ ] Convert local date/time controls to valid UTC instants for the API and show
   clear localized validation for invalid or inverted ranges
 - [ ] Start a new infinite-query chain when any filter changes
-- [ ] Keep the page limit fixed unless a user-facing limit control is explicitly
-  added; never expose the cursor in a control
+- [ ] Keep the page limit fixed at 5 unless a user-facing limit control is
+  explicitly added; never expose the cursor in a control
 
 #### Grouped vertical timeline
 
@@ -669,15 +668,15 @@ plus final cross-feature verification
 
 ## Final completion record
 
-- [ ] All scope decisions are checked
-- [ ] All four slices are checked in [Progress](#progress)
-- [ ] Every requirement from `WEB-001` through `WEB-018` is covered by at least
+- [x] All scope decisions are checked
+- [x] All four slices are checked in [Progress](#progress)
+- [x] Every requirement from `WEB-001` through `WEB-018` is covered by at least
   one passing automated test or recorded manual verification
-- [ ] `pnpm lint`, `pnpm test -- --run`, and `pnpm build` pass from the final
+- [x] `pnpm lint`, `pnpm test -- --run`, and `pnpm build` pass from the final
   worktree
-- [ ] The final implementation matches the checked-in OpenAPI contract
-- [ ] The frontend contains no create or edit feature routes
-- [ ] English and German cover all application-owned copy
-- [ ] The Books table, creation modal, details, inline edit form, grouped
+- [x] The final implementation matches the checked-in OpenAPI contract
+- [x] The frontend contains no create or edit feature routes
+- [x] English and German cover all application-owned copy
+- [x] The Books table, creation modal, details, edit modal, grouped
   timeline, and Load More flow have been verified together
-- [ ] No file outside `library-web` was changed
+- [x] No file outside `library-web` was changed

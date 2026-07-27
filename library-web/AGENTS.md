@@ -21,8 +21,15 @@ explain origins; they are not implementation rules.
 
 - Work only in `library-web` unless a coordinated API change is explicitly in scope.
 - Use `pnpm` and the versions declared in `package.json`.
-- Organize screens under `pages/<page>/index.tsx`. Keep a page-only component
-  beside its page and move it to `components/` only when it is reused.
+- Organize each screen under `pages/<page>/`. Implement the route component
+  directly in `index.tsx`; do not re-export it from another page component.
+  Put auxiliary page-specific React components in
+  `pages/<page>/components/`. Move a component to shared `components/` only when
+  it is reused across pages.
+- Inside every React component, keep declarations in this order: `useState`
+  hooks first; remaining hooks followed by effects; handler/helper functions;
+  conditional returns; final render. A state initializer that depends on an
+  earlier hook may follow that dependency.
 - Build basic UI from shadcn/ui and Tailwind. Define Tailwind theme variables in
   `src/index.css` with top-level `@theme`; use `:root` only for regular CSS
   variables that should not create utilities.

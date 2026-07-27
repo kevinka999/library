@@ -12,7 +12,7 @@ shapes and [`../../CONTEXT.md`](../../CONTEXT.md) defines product language.
 | --- | --- |
 | `/` | Redirect to `/books` |
 | `/books` | Search and numbered Book pages, with Book creation in a modal |
-| `/books/:bookId` | Current Book details, inline editing, and history |
+| `/books/:bookId` | Current Book details, modal editing, and history |
 
 Unknown routes show a useful not-found screen. Invalid Book IDs never trigger an
 API request.
@@ -23,7 +23,8 @@ API request.
 
 - **WEB-001:** `/books` shows API-ordered results with title, author names,
   Publish Date, and a link to the stable detail route.
-- **WEB-002:** `search`, `page`, and `pageSize` live in URL search params.
+- **WEB-002:** `search`, `page`, and `pageSize` live in URL search params. The
+  Books table accepts page sizes 5 and 10.
   Changing search or page size resets `page` to 1.
 - **WEB-003:** Loading, no-results, invalid-query, and unexpected-error states are
   distinct. Pagination uses the API totals and stays keyboard accessible.
@@ -38,12 +39,12 @@ API request.
 - **WEB-006:** A successful create caches the returned Book and ETag, then
   navigates to `/books/{id}`.
 - **WEB-007:** The detail route shows the complete current representation and
-  allows editing in the same page with a Formik form and Yup validation. Book
+  opens editing in a modal with a Formik form and Yup validation. Book
   History appears below the current Book information.
 
 ### Replace safely
 
-- **WEB-008:** The inline edit form starts from one Book response and retains
+- **WEB-008:** The modal edit form starts from one Book response and retains
   that response's exact ETag.
 - **WEB-009:** Update sends every editable field with `If-Match`; a successful
   response replaces cached Book data and ETag.
@@ -56,7 +57,8 @@ API request.
 ### History
 
 - **WEB-012:** History is loaded separately from current Book state and uses an
-  infinite query with the opaque `nextCursor` as `after`.
+  infinite query with the opaque `nextCursor` as `after`, loading five Change
+  Sets at a time.
 - **WEB-013:** Filters for Changed Field, inclusive start, exclusive end, and
   chronological direction live in the URL. Changing a filter starts a new cursor chain.
 - **WEB-014:** Each history item renders one complete Change Set as one item in
@@ -90,6 +92,6 @@ sorting, offline mutation, and realtime updates are not part of this delivery.
 1. Root providers, two-route shell, theme tokens, shadcn/ui foundation, HTTP
    client, test harness, and English/German localization.
 2. Typed Book API, query keys, searchable numbered table, and create modal.
-3. Detail page and concurrency-safe inline Formik/Yup edit flow.
+3. Detail page and concurrency-safe modal Formik/Yup edit flow.
 4. Cursor-paged timeline, filters, localized change descriptions, accessibility
    pass, behavior tests, error recovery, and responsive verification.
