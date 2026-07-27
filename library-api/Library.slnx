@@ -4,4 +4,5 @@
   <Project Path="Library.Domain/Library.Domain.csproj" />
   <Project Path="Library.Infrastructure/Library.Infrastructure.csproj" />
   <Project Path="Library.UnitTests/Library.UnitTests.csproj" />
+  <Project Path="tools/Library.Seed/Library.Seed.csproj" />
 </Solution>

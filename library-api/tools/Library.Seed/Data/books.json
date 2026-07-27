@@ -1,0 +1,469 @@
+{
+  "books": [
+    {
+      "initial": {
+        "title": "Northern Lights Project",
+        "shortDescription": "A cartographer searches for a road that vanished from every map.",
+        "publishDate": "2021-02-10",
+        "authors": ["Mira Vale"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A cartographer follows an impossible light across the winter archipelago to recover a road erased from every map."
+        },
+        {
+          "title": "The Lantern Map"
+        },
+        {
+          "publishDate": "2021-03-18"
+        },
+        {
+          "authors": ["Mira A. Vale"]
+        },
+        {
+          "shortDescription": "A grieving cartographer follows an impossible lantern across a winter archipelago, where each island remembers a different version of the missing road."
+        },
+        {
+          "title": "The Cartographer's Lantern"
+        },
+        {
+          "shortDescription": "A grieving cartographer follows an impossible lantern across a winter archipelago and must choose which of its conflicting maps deserves to become true."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Orchard Notes",
+        "shortDescription": "Three sisters inherit an orchard and a box of unsent letters.",
+        "publishDate": "2019-08-01",
+        "authors": ["Elena Marrow"]
+      },
+      "changes": [
+        {
+          "shortDescription": "Three estranged sisters inherit an orchard whose harvest dates match a box of letters their mother never sent."
+        },
+        {
+          "title": "Letters from the Orchard"
+        },
+        {
+          "publishDate": "2019-09-12"
+        },
+        {
+          "authors": ["Elena S. Marrow"]
+        },
+        {
+          "shortDescription": "Three estranged sisters return for the final apple harvest and discover that their mother's unsent letters predict which trees will survive the winter."
+        },
+        {
+          "title": "The Orchard of Unsent Letters"
+        },
+        {
+          "shortDescription": "During the final apple harvest, three estranged sisters use their mother's unsent letters to uncover why she protected one barren tree for thirty years."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Second Tide",
+        "shortDescription": "A harbor mechanic repairs boats after the moon changes course.",
+        "publishDate": "2023-05-04",
+        "authors": ["Jon Bell"]
+      },
+      "changes": [
+        {
+          "shortDescription": "After the moon changes course, a harbor mechanic repairs vessels damaged by a second daily tide."
+        },
+        {
+          "title": "Harbor at the Second Tide"
+        },
+        {
+          "publishDate": "2023-06-22"
+        },
+        {
+          "authors": ["Jonathan Bell"]
+        },
+        {
+          "shortDescription": "A harbor mechanic learns that ships returning on the new tide carry passengers who remember futures that never happened."
+        },
+        {
+          "title": "When the Second Tide Returns"
+        },
+        {
+          "shortDescription": "When a new tide begins returning ships from abandoned futures, a harbor mechanic searches their passengers for the brother she lost at sea."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Museum Night Draft",
+        "shortDescription": "A night guard notices that the museum portraits are changing.",
+        "publishDate": "2020-10-02",
+        "authors": ["Theo Arden"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A museum guard discovers that every portrait changes at midnight to show the following day's visitors."
+        },
+        {
+          "title": "The Museum After Midnight"
+        },
+        {
+          "publishDate": "2020-10-29"
+        },
+        {
+          "authors": ["Theodore Arden"]
+        },
+        {
+          "shortDescription": "A museum guard relies on prophetic portraits until one canvas shows an empty gallery and his own abandoned uniform."
+        },
+        {
+          "title": "Portraits of Tomorrow"
+        },
+        {
+          "shortDescription": "When prophetic portraits show the museum standing empty, its night guard has one shift to identify the visitor who will erase every work of art."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Quiet Signals",
+        "shortDescription": "An astronomer receives a radio message from an empty part of space.",
+        "publishDate": "2024-01-15",
+        "authors": ["Nadia Quill"]
+      },
+      "changes": [
+        {
+          "shortDescription": "An astronomer receives a repeating radio message from a region where no star has ever formed."
+        },
+        {
+          "title": "Signals from the Quiet Sky"
+        },
+        {
+          "publishDate": "2024-02-08"
+        },
+        {
+          "authors": ["Nadia R. Quill"]
+        },
+        {
+          "shortDescription": "An astronomer decodes a message from starless space and hears detailed reports of choices she has not made yet."
+        },
+        {
+          "title": "The Silence Between Signals"
+        },
+        {
+          "shortDescription": "An astronomer decoding broadcasts from her possible futures must decide whether silence is a warning, an invitation, or the only safe reply."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Glasshouse Recipes",
+        "shortDescription": "A chef takes over a greenhouse restaurant with an unusual menu.",
+        "publishDate": "2018-04-03",
+        "authors": ["Iris Cole"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A chef inherits a greenhouse restaurant where every recipe is tied to a plant that blooms only once."
+        },
+        {
+          "title": "Recipes for a Glasshouse"
+        },
+        {
+          "publishDate": "2018-04-24"
+        },
+        {
+          "authors": ["Iris M. Cole"]
+        },
+        {
+          "shortDescription": "To save an inherited greenhouse restaurant, a chef must recreate seven dishes from plants that everyone believes are extinct."
+        },
+        {
+          "title": "The Last Glasshouse Menu"
+        },
+        {
+          "shortDescription": "A chef races through one final flowering season to recreate the seven lost dishes that can save her family's greenhouse restaurant."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Station 9",
+        "shortDescription": "Two engineers keep a remote mountain weather station running.",
+        "publishDate": "2022-11-01",
+        "authors": ["Samir Holt"]
+      },
+      "changes": [
+        {
+          "shortDescription": "Two engineers are stranded at a mountain weather station during a storm absent from every forecast."
+        },
+        {
+          "title": "Weather Station Nine"
+        },
+        {
+          "publishDate": "2022-11-17"
+        },
+        {
+          "authors": ["Samir K. Holt", "June Mercer"]
+        },
+        {
+          "shortDescription": "Stranded engineers at Station Nine discover that their instruments are measuring storms from one week in the future."
+        },
+        {
+          "title": "The Forecast at Station Nine"
+        },
+        {
+          "shortDescription": "Two engineers trapped above the snow line must interpret forecasts arriving one week early before the final storm cuts off the valley below."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Borrowed Hours",
+        "shortDescription": "A clock repairer finds an extra hour hidden inside an antique watch.",
+        "publishDate": "2017-06-07",
+        "authors": ["Leonie Hart"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A clock repairer learns that an antique watch can lend one extra hour to whoever winds it."
+        },
+        {
+          "title": "The Watch of Borrowed Hours"
+        },
+        {
+          "publishDate": "2017-07-13"
+        },
+        {
+          "authors": ["Léonie Hart"]
+        },
+        {
+          "shortDescription": "Each use of an antique watch grants a clock repairer one extra hour while quietly removing an hour from someone nearby."
+        },
+        {
+          "title": "An Hour Borrowed"
+        },
+        {
+          "shortDescription": "A clock repairer must return every stolen hour before the antique watch takes an entire day from the person she loves most."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "The Paper City",
+        "shortDescription": "A courier delivers messages through a city rebuilt every morning.",
+        "publishDate": "2025-03-03",
+        "authors": ["Mira Vale"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A bicycle courier navigates a paper city whose streets are folded into a new shape every morning."
+        },
+        {
+          "title": "Courier of the Paper City"
+        },
+        {
+          "publishDate": "2025-03-27"
+        },
+        {
+          "authors": ["Mira A. Vale"]
+        },
+        {
+          "shortDescription": "A courier who memorizes every version of the paper city receives a letter addressed to a district that has never existed."
+        },
+        {
+          "title": "The Folded City Courier"
+        },
+        {
+          "shortDescription": "When a letter points to an impossible district, the only courier who remembers every folded street must find it before the city is reshaped again."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Winter Beekeeping",
+        "shortDescription": "A beekeeper discovers a hive that remains active beneath the snow.",
+        "publishDate": "2021-12-01",
+        "authors": ["Pavel North"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A beekeeper discovers a warm hive beneath the snow, producing honey scented with forgotten summers."
+        },
+        {
+          "title": "Bees Beneath the Snow"
+        },
+        {
+          "publishDate": "2021-12-16"
+        },
+        {
+          "authors": ["Pavel N. North"]
+        },
+        {
+          "shortDescription": "Honey from a winter hive restores lost summer memories, drawing strangers to a village that has chosen to forget."
+        },
+        {
+          "title": "The Winter Hive"
+        },
+        {
+          "shortDescription": "A beekeeper protects a winter hive whose honey restores memories from the village's last summer before a devastating fire."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "River Archive",
+        "shortDescription": "An archivist collects objects carried downstream after a flood.",
+        "publishDate": "2016-09-05",
+        "authors": ["Cora Wren"]
+      },
+      "changes": [
+        {
+          "shortDescription": "After a flood, an archivist catalogs objects that drift from towns missing from every modern map."
+        },
+        {
+          "title": "The Archive Downriver"
+        },
+        {
+          "publishDate": "2016-09-29"
+        },
+        {
+          "authors": ["Cora E. Wren"]
+        },
+        {
+          "shortDescription": "An archivist traces flood debris to drowned towns and finds each object labeled in her own handwriting."
+        },
+        {
+          "title": "What the River Archived"
+        },
+        {
+          "shortDescription": "Objects from drowned towns arrive labeled in an archivist's handwriting, leading her upriver toward a collection she has not created yet."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Red Desert Garden",
+        "shortDescription": "A botanist tends the first greenhouse on Mars.",
+        "publishDate": "2026-04-09",
+        "authors": ["Nadia Quill"]
+      },
+      "changes": [
+        {
+          "shortDescription": "The botanist responsible for Mars's first greenhouse finds an unfamiliar seedling growing outside its sealed walls."
+        },
+        {
+          "title": "A Garden Beyond the Airlock"
+        },
+        {
+          "publishDate": "2026-05-14"
+        },
+        {
+          "authors": ["Nadia R. Quill"]
+        },
+        {
+          "shortDescription": "An impossible seedling beyond the Mars habitat forces a botanist to question the colony's maps, sensors, and founding story."
+        },
+        {
+          "title": "The Garden Outside Mars"
+        },
+        {
+          "shortDescription": "When plants begin growing beyond the airlock, a Martian botanist follows their roots toward evidence that the supposedly barren valley was prepared for her arrival."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Choir Practice",
+        "shortDescription": "A village choir learns a song no member remembers choosing.",
+        "publishDate": "2019-01-10",
+        "authors": ["June Mercer"]
+      },
+      "changes": [
+        {
+          "shortDescription": "A village choir discovers an unknown song written between the pages of every singer's score."
+        },
+        {
+          "title": "The Unwritten Choir"
+        },
+        {
+          "publishDate": "2019-02-21"
+        },
+        {
+          "authors": ["June A. Mercer"]
+        },
+        {
+          "shortDescription": "Each rehearsal adds a new verse to an unknown song, describing events that happen in the village the next morning."
+        },
+        {
+          "title": "The Song Between the Pages"
+        },
+        {
+          "shortDescription": "A choir must decide whether to perform the final verse of a song that has accurately predicted every event in their village."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Blue Hotel",
+        "shortDescription": "A hotel manager prepares rooms for guests who never arrive.",
+        "publishDate": "2023-07-06",
+        "authors": ["Theo Arden"]
+      },
+      "changes": [
+        {
+          "shortDescription": "Every summer, a coastal hotel manager prepares seven blue rooms for guests listed only by the dates of old storms."
+        },
+        {
+          "title": "Seven Rooms at the Blue Hotel"
+        },
+        {
+          "publishDate": "2023-07-20"
+        },
+        {
+          "authors": ["Theodore Arden"]
+        },
+        {
+          "shortDescription": "The guests of seven blue rooms finally arrive during clear weather, each carrying luggage recovered from a different shipwreck."
+        },
+        {
+          "title": "The Blue Rooms"
+        },
+        {
+          "shortDescription": "When seven long-awaited guests bring luggage from forgotten shipwrecks, a hotel manager must uncover why every suitcase bears his family name."
+        }
+      ]
+    },
+    {
+      "initial": {
+        "title": "Manual for Small Storms",
+        "shortDescription": "An apprentice learns to maintain the weather inside glass bottles.",
+        "publishDate": "2027-01-12",
+        "authors": ["Elena Marrow"]
+      },
+      "changes": [
+        {
+          "shortDescription": "An apprentice weather keeper learns to feed, calm, and catalog the tiny storms stored in a city tower."
+        },
+        {
+          "title": "A Manual of Bottled Weather"
+        },
+        {
+          "publishDate": "2027-02-18"
+        },
+        {
+          "authors": ["Elena S. Marrow", "Samir K. Holt"]
+        },
+        {
+          "shortDescription": "When a bottled storm escapes, an apprentice follows its precise path through neighborhoods excluded from the official weather maps."
+        },
+        {
+          "title": "The Keeper of Small Storms"
+        },
+        {
+          "shortDescription": "An apprentice weather keeper chases an escaped storm through the city and discovers why certain neighborhoods were erased from every forecast."
+        }
+      ]
+    }
+  ]
+}

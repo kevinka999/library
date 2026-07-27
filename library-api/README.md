@@ -79,6 +79,41 @@ dotnet user-secrets set --project Library.Api \
 Use `docker compose down` to stop PostgreSQL. Add `--volumes` only when you also
 want to delete all local database data.
 
+## Development seed data
+
+With the API running, populate an empty development database through the public
+Book endpoints:
+
+```sh
+dotnet run --project tools/Library.Seed
+```
+
+The seed creates 15 fictional Books for numbered paging and search scenarios.
+Each Book is created and then updated seven times, producing eight coherent,
+chronologically ordered Change Sets per Book (at least 120 Change Sets in
+total). Because the tool uses `POST /api/books` and `PUT /api/books/{id}`, it
+exercises the same validation, immutable history, and optimistic concurrency
+behavior as a client.
+
+The tool targets `http://localhost:5168` by default and refuses to run when any
+Books already exist, which prevents accidental duplicate data. Use a different
+API address with:
+
+```sh
+dotnet run --project tools/Library.Seed -- \
+  --base-url http://localhost:5000
+```
+
+Passing `--allow-non-empty` overrides the safety check and may create duplicate
+Books. Run `dotnet run --project tools/Library.Seed -- --help` for all options.
+
+After seeding, useful paging examples include:
+
+```text
+GET /api/books?page=1&pageSize=5
+GET /api/books/{id}/history?sortDirection=ascending&limit=3
+```
+
 ## Migrations
 
 The API automatically applies pending migrations at startup only when
